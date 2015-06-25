@@ -13,7 +13,6 @@ int main(char* argsv, char argc) {
 
 		cv::Mat frame;
 		cv::vector<cv::vector<cv::Point>> contours;
-		cv::vector<cv::Vec4i> hierarchy;
 
 		cap >> frame;
 		cvtColor(frame, frame, CV_BGR2HSV);
@@ -43,7 +42,7 @@ int main(char* argsv, char argc) {
 		if (contours.size() > 0) {
 			cv::vector<cv::vector<cv::Point>> interestingContours;
 
-			for (int i = 1; i < contours.size(); i++) {
+			for (unsigned int i = 1; i < contours.size(); i++) {
 				if (cv::contourArea(contours[i]) > 10000) {
 					interestingContours.push_back(contours[i]);
 				}
