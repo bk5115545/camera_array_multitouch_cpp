@@ -17,7 +17,7 @@ int main(char* argsv, char argc) {
 		cap >> frame;
 		cvtColor(frame, frame, CV_BGR2HSV);
 		cv::inRange(frame, cv::Scalar(0, 48, 80), cv::Scalar(20, 255, 255), frame);
-		//cv::imshow("range", frame);
+		cv::imshow("range", frame);
 
 		//clean it up
 		cv::erode(frame, frame, cv::Mat(), cv::Point(-1, -1), 3, 1);
