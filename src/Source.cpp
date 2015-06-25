@@ -35,7 +35,7 @@ int main(char* argsv, char argc) {
 
 		cv::Mat contourMat = cv::Mat::zeros(edges.size(), CV_8UC3);
 		cv::Scalar color = cv::Scalar(255, 255, 255);
-		cv::drawContours(contourMat, contours, -1, color, 2, 8, hierarchy);
+		cv::drawContours(contourMat, contours, -1, color, 2, 8);
 
 
 		cv::imshow("All Contours", contourMat);
