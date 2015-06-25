@@ -42,6 +42,14 @@
   <PropertyGroup>
     <NuGetPackageImportStamp>31826fde</NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <SourcePath>D:\Dev\Projects\camera_array_multitouch_cpp\src;$(SourcePath)</SourcePath>
+    <IncludePath>D:\Dev\Projects\camera_array_multitouch_cpp\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <SourcePath>D:\Dev\Projects\camera_array_multitouch_cpp\src;$(SourcePath)</SourcePath>
+    <IncludePath>D:\Dev\Projects\camera_array_multitouch_cpp\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -67,10 +75,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
