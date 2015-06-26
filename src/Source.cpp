@@ -6,8 +6,18 @@ int main(char* argsv, char argc) {
 	cv::VideoCapture cap(1); // open the default camera
 
 	if (!cap.isOpened()) // check if we succeeded
-
 		return -1;
+
+	cv::namedWindow("Parameters", 1);
+	cv::createTrackbar("H-Low", "Parameters", 0, 254, NULL);
+	cv::createTrackbar("H-High", "Parameters", 0, 255, NULL);
+
+	cv::createTrackbar("S-Low", "Parameters", 0, 254, NULL);
+	cv::createTrackbar("S-High", "Parameters", 0, 255, NULL);
+
+	cv::createTrackbar("V-Low", "Parameters", 0, 254, NULL);
+	cv::createTrackbar("V-High", "Parameters", 0, 255, NULL);
+
 
 	while (true) {
 
@@ -17,11 +27,16 @@ int main(char* argsv, char argc) {
 		cap >> frame;
 		cvtColor(frame, frame, CV_BGR2HSV);
 		cv::inRange(frame, cv::Scalar(0, 48, 80), cv::Scalar(20, 255, 255), frame);
+		//cv::inRange(frame, cv::Scalar(0, 49, 38), cv::Scalar(19, 121, 255), frame);
+		//cv::inRange(frame, cv::Scalar(cv::getTrackbarPos("H-Low", "Parameters"), cv::getTrackbarPos("S-Low", "Parameters"), cv::getTrackbarPos("V-Low", "Parameters")), 
+		//				   cv::Scalar(cv::getTrackbarPos("H-High", "Parameters"), cv::getTrackbarPos("S-High", "Parameters"), cv::getTrackbarPos("V-High", "Parameters")), frame);
 		cv::imshow("range", frame);
 
 		//clean it up
+		cv::dilate(frame, frame, cv::Mat(), cv::Point(-1, -1), 2, 1);
 		cv::erode(frame, frame, cv::Mat(), cv::Point(-1, -1), 3, 1);
-		cv::dilate(frame, frame, cv::Mat(), cv::Point(-1, -1), 6, 1);
+		cv::dilate(frame, frame, cv::Mat(), cv::Point(-1, -1), 4, 1);
+		cv::erode(frame, frame, cv::Mat(), cv::Point(-1, -1), 2, 1);
 		cv::imshow("cleanup", frame);
 
 		//find edges
@@ -30,7 +45,7 @@ int main(char* argsv, char argc) {
 		cv::imshow("edge detect", edges);
 
 		cv::RNG rng = cv::RNG(54121315467);
-		cv::findContours(frame, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_TC89_KCOS, cv::Point(0, 0));
+		cv::findContours(frame, contours, cv::RETR_LIST, cv::CHAIN_APPROX_TC89_L1, cv::Point(0, 0));
 
 		cv::Mat contourMat = cv::Mat::zeros(edges.size(), CV_8UC3);
 		cv::Scalar color = cv::Scalar(255, 255, 255);
@@ -43,6 +58,7 @@ int main(char* argsv, char argc) {
 			cv::vector<cv::vector<cv::Point>> interestingContours;
 
 			for (unsigned int i = 1; i < contours.size(); i++) {
+				printf("area:\t%f\n", cv::contourArea(contours[i]));
 				if (cv::contourArea(contours[i]) > 10000) {
 					interestingContours.push_back(contours[i]);
 				}
@@ -59,6 +75,8 @@ int main(char* argsv, char argc) {
 
 		if (cv::waitKey(30) >= 0) break;
 	}
+
+	cv::destroyAllWindows();
 
 	return 0;
 }
