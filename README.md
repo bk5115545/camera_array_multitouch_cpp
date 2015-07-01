@@ -27,7 +27,7 @@ First steps are as follows:
 6. Test performance and feasibility of embedded computers (```Raspberry PI or similar```).
 7. Design frame for camera array and wiring/components.
 8. Design and implement automatic camera calibration and real-time parameter tuning for optimal tracking and feature extraction.
-
+ 
 
 ---
 ## Long-Term Goal
