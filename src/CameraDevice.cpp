@@ -35,3 +35,19 @@ Frame* CameraDevice::getFrame() {
 	frame_id %= 3600; //reset ID every minute
 	return new Frame(&mat, camera_id, frame_id++);
 }
+
+/*
+	This has been known in the community
+	to not work, but I am testing it.
+*/
+double CameraDevice::getFps() {
+	return capture.get(CV_CAP_PROP_FPS);
+}
+
+/*
+	This has been known in the community
+	to not work, but I am testing it.
+*/
+bool CameraDevice::setFps(double value) {
+	return capture.set(CV_CAP_PROP_FPS, value);
+}

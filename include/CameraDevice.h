@@ -21,4 +21,7 @@ class CameraDevice {
 
 		Frame* getFrame();
 
+		double getFps();
+		bool setFps(double value);
+
 };

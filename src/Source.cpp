@@ -3,7 +3,7 @@
 #include <thread>
 #include "CameraDevice.h"
 #include "Transformer.h"
-//#include "Frame.h"
+#include "Frame.h"
 
 /*
 int useMotionEstimation() {
@@ -51,11 +51,16 @@ int main(char* argsv, char argc) {
 	Transformer tr (1);
 
 	while (true) {
-		tr.enqueue(dev.getFrame());
+		//tr.enqueue(dev.getFrame());
+		//cv::imshow("testing", tr.popResult()->operator cv::Mat());
+		
+		dev.setFps(20);
+		std::cout << dev.getFps() << "\n";
 
-		cv::imshow("testing", tr.popResult()->operator cv::Mat());
+		//Frame * frame = dev.getFrame();
+		//cv::imshow("testing", frame->operator cv::Mat);
 
-		if (cv::waitKey(27)) break;
+		//if (cv::waitKey(27)) break;
 	}
 
 	return 0;
