@@ -28,5 +28,4 @@ class Transformer {
 		int totalTransformerThreads();
 		int enqueue(Frame* frame);
 		Frame* popResult(bool blocking = false);
-
 };

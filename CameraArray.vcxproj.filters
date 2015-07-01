@@ -35,7 +35,7 @@
     <ClInclude Include="include\Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transformer.h">
+    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\include\Transformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

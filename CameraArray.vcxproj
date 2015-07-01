@@ -83,12 +83,14 @@
     <ClCompile Include="Transformer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\include\Transformer.h" />
     <ClInclude Include="include\CameraDevice.h" />
     <ClInclude Include="include\Frame.h" />
-    <ClInclude Include="Transformer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
