@@ -32,5 +32,6 @@ void CameraDevice::release() {
 Frame* CameraDevice::getFrame() {
 	cv::Mat mat;
 	capture.read(mat);
-	return new Frame(&mat, camera_id);
+	frame_id %= 3600; //reset ID every minute
+	return new Frame(&mat, camera_id, frame_id++);
 }
