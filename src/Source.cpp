@@ -56,7 +56,7 @@ int main(char* argsv, char argc) {
 		
 		dev.setFps(20);
 	//	std::cout << dev.getFps() << "\n";
-		std::cout << dev.getResolution()[0] << "\n";
+		std::cout << dev.getOpenCVProperty(CV_CAP_PROP_POS_FRAMES) << "\n";
 
 		//Frame * frame = dev.getFrame();
 		//cv::imshow("testing", frame->operator cv::Mat);

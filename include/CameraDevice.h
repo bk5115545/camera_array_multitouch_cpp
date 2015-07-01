@@ -24,7 +24,9 @@ class CameraDevice {
 		double getFps();
 		bool setFps(double value);
 
-
 		double* getResolution();
 		bool* setResolution(double height, double width);
+
+		double getOpenCVProperty(int prop_id);
+		bool setOpenCVProperty(int prop_id, double value);
 };

@@ -79,3 +79,11 @@ bool* CameraDevice::setResolution(double height, double width) {
 
 	return err_flags;
 }
+
+double CameraDevice::getOpenCVProperty(int prop_id) {
+	return capture.get(prop_id);
+}
+
+bool CameraDevice::setOpenCVProperty(int prop_id, double value) {
+	return capture.set(prop_id, value);
+}
