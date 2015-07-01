@@ -1,20 +1,24 @@
 #include "Frame.h"
 
+Frame::Frame() {
+	_frame = cv::Mat::zeros(cv::Size(640, 480), 3);
+	_camera_id = -1;
+	_frame_id = -1;
+} 
+
 Frame::Frame(cv::Mat* source, int camera_id, int frame_id) {
-	source->assignTo(_frame);
+	//source->assignTo(_frame);
+	_frame = *source;
 	this->_camera_id = camera_id;
 	this->_frame_id = frame_id;
-
-	this->features = std::unordered_map<std::string, void*>();
 }
 
 Frame::~Frame() {
-	_frame.release();
-	_frame = 0;
+
 }
 
-cv::Mat* Frame::getData() {
-	return &_frame;
+cv::Mat Frame::getData() {
+	return _frame;
 }
 
 int Frame::getCameraID() {
@@ -23,8 +27,4 @@ int Frame::getCameraID() {
 
 int Frame::getID() {
 	return _frame_id;
-}
-
-Frame::operator cv::Mat() const {
-	return _frame;
 }

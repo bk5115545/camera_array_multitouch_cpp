@@ -8,19 +8,19 @@
 class Transformer {
 
 	private:
-		boost::lockfree::queue<Frame*> jobs;
-		boost::lockfree::queue<Frame*> results;
+		boost::lockfree::queue<Frame*>* jobs;
+		boost::lockfree::queue<Frame*>* results;
 
 		static std::atomic<int> class_threads;
 
-		std::atomic<int> instance_threads = 0;
-		std::atomic<int> max_threads = 0;
-		std::atomic<int> job_count = 0;
+		std::atomic<int> instance_threads;
+		std::atomic<int> max_threads;
+		std::atomic<int> job_count;
 		
 		std::vector<std::thread*> threads;
 
 	public:
-		Transformer(int thread_count = 4);
+		Transformer(int);
 		~Transformer();
 
 		void run();
@@ -29,5 +29,5 @@ class Transformer {
 		int totalTransformerThreads();
 		int enqueue(Frame* frame);
 
-		Frame* popResult(bool blocking = false);
+		bool popResult(Frame*& into, bool blocking = false);
 };

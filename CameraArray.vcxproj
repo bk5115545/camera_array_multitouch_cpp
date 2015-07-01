@@ -83,9 +83,9 @@
     <ClCompile Include="Transformer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\include\Transformer.h" />
     <ClInclude Include="include\CameraDevice.h" />
     <ClInclude Include="include\Frame.h" />
+    <ClInclude Include="include\Transformer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

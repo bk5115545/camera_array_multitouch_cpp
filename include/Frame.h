@@ -12,10 +12,11 @@ class Frame {
 		std::unordered_map<std::string, void*> features;
 
 	public:
-		Frame(cv::Mat*, int camera_id, int frame_id);
+		Frame();
+		Frame(cv::Mat* source, int camera_id, int frame_id);
 		~Frame();
 
-		cv::Mat* getData();
+		cv::Mat getData();
 		int getCameraID();
 		int getID();
 		template<class T> T getProperty(std::string name, T t);

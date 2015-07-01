@@ -44,18 +44,25 @@ int useMotionEstimation() {
 */
 
 int main(char* argsv, char argc) {
-	CameraDevice dev(0);
+	CameraDevice dev(2);
 
 	if (!dev.acquire()) return 1;
 
-	Transformer tr (1);
+	Transformer tr(1);// = new Transformer(1);
 
 	while (true) {
-		tr.enqueue(dev.getFrame());
+		Frame* inputFrame = dev.getFrame(); //implicit copy so we can get a new frame in the background
+		std::cout << "c " << inputFrame->getCameraID() << " f " << inputFrame->getID()
+			<< "\n";
+		tr.enqueue(inputFrame); //implicit copy because we can't guarantee that the frame is available when it's processed
 
-		cv::imshow("testing", tr.popResult()->operator cv::Mat());
+		Frame* frame = nullptr;
 
-		if (cv::waitKey(27)) break;
+		if (tr.popResult(frame)) {
+			cv::imshow("testing", frame->getData());
+		}
+
+		//if (cv::waitKey(27)) break;
 	}
 
 	return 0;
