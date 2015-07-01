@@ -2,11 +2,8 @@
 
 std::atomic<int> Transformer::class_threads = 0;
 
-Transformer::Transformer(int thread_count) {
-	//this->jobs = boost::lockfree::queue<Frame*>();
-	//this->results = boost::lockfree:queue<Frame*>();
-
-	this->max_threads = thread_count;
+Transformer::Transformer(int thread_count) : jobs(128), results(128) {
+	max_threads = thread_count;
 }
 
 Transformer::~Transformer() {
@@ -18,7 +15,7 @@ void Transformer::run() {
 	while (job_count.fetch_add(-1) > 0) { //TODO check that this works correctly
 		Frame* raw;
 		jobs.pop(raw);
-		
+
 		cv::Mat frame = *raw;
 
 		cv::vector<cv::vector<cv::Point>> contours;

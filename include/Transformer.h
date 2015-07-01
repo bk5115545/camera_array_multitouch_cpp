@@ -12,6 +12,7 @@ class Transformer {
 		boost::lockfree::queue<Frame*> results;
 
 		static std::atomic<int> class_threads;
+
 		std::atomic<int> instance_threads = 0;
 		std::atomic<int> max_threads = 0;
 		std::atomic<int> job_count = 0;
@@ -27,5 +28,6 @@ class Transformer {
 		
 		int totalTransformerThreads();
 		int enqueue(Frame* frame);
+
 		Frame* popResult(bool blocking = false);
 };

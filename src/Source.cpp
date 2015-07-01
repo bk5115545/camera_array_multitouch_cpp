@@ -3,8 +3,7 @@
 #include <thread>
 #include "CameraDevice.h"
 #include "Transformer.h"
-#include "Frame.h"
-
+//#include "Frame.h"
 
 /*
 int useMotionEstimation() {
@@ -49,7 +48,7 @@ int main(char* argsv, char argc) {
 
 	if (!dev.acquire()) return 1;
 
-	Transformer tr(1);
+	Transformer tr (1);
 
 	while (true) {
 		tr.enqueue(dev.getFrame());
