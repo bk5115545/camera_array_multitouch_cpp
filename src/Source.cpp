@@ -25,7 +25,7 @@ int useMotionEstimation() {
 		cap.read(liveFrame);
 
 		cv::cvtColor(liveFrame, currentFrame, cv::COLOR_BGR2GRAY);
-
+		//cv::blur(...);
 		cv::absdiff(previousFrame, currentFrame, diffFrame);
 		cv::threshold(diffFrame, tmpFrame, cv::getTrackbarPos("Sensitivity", "Threshold Settings"), 255, cv::THRESH_BINARY);
 

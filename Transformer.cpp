@@ -1,29 +1,5 @@
 #include "Transformer.h"
 
-/*
-
-private:
-boost::lockfree::queue<Frame*> jobs;
-boost::lockfree::queue<Frame*> results;
-
-static std::atomic<int> class_threads;
-std::atomic<int> instance_threads = 0;
-std::atomic<int> max_threads = 0;
-std::atomic<int> job_count = false;
-
-std::vector<std::thread*> threads;
-
-public:
-Transformer(int thread_count = 4);
-~Transformer();
-
-void run();
-std::vector<Frame*> stop_threads();
-
-int enqueue(Frame* frame);
-Frame* popResult(bool blocking = false);
-*/
-
 std::atomic<int> Transformer::class_threads = 0;
 
 Transformer::Transformer(int thread_count) {
