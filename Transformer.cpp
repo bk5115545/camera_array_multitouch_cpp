@@ -2,7 +2,7 @@
 
 std::atomic<int> Transformer::class_threads = 0;
 
-Transformer::Transformer(int thread_count) : jobs(128), results(128) {
+Transformer::Transformer(int thread_count) : jobs(1000), results(1000) {
 	max_threads = thread_count;
 }
 
