@@ -22,13 +22,10 @@ class Transformer {
 		Transformer(int thread_count = 4);
 		~Transformer();
 
-		int totalTransformerThreads() {
-			return class_threads;
-		}
-
 		void run();
 		std::vector<Frame*> stop_threads();
-
+		
+		int totalTransformerThreads();
 		int enqueue(Frame* frame);
 		Frame* popResult(bool blocking = false);
 

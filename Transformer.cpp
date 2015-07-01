@@ -100,6 +100,9 @@ void Transformer::run() {
 	}
 }
 
+int Transformer::totalTransformerThreads() {
+	return class_threads;
+}
 
 int Transformer::enqueue(Frame* frame) {
 	jobs.push(frame);
