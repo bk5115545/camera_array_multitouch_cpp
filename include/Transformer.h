@@ -30,4 +30,5 @@ class Transformer {
 		int enqueue(Frame* frame);
 
 		bool popResult(Frame*& into, bool blocking = false);
+
 };

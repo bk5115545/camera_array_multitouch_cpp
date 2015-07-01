@@ -3,7 +3,7 @@
 #include <thread>
 #include "CameraDevice.h"
 #include "Transformer.h"
-//#include "Frame.h"
+#include "Frame.h"
 
 /*
 int useMotionEstimation() {
@@ -61,7 +61,6 @@ int main(char* argsv, char argc) {
 		if (tr.popResult(frame)) {
 			cv::imshow("testing", frame->getData());
 		}
-
 		//if (cv::waitKey(27)) break;
 	}
 
