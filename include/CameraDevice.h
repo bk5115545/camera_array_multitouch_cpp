@@ -24,4 +24,7 @@ class CameraDevice {
 		double getFps();
 		bool setFps(double value);
 
+
+		double* getResolution();
+		bool* setResolution(double height, double width);
 };

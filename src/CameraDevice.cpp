@@ -51,3 +51,31 @@ double CameraDevice::getFps() {
 bool CameraDevice::setFps(double value) {
 	return capture.set(CV_CAP_PROP_FPS, value);
 }
+
+/*
+	OUTPUT:
+		set_values[0] true if get height is successful
+		set_values[1] true if get width is successful
+*/
+double* CameraDevice::getResolution() {
+	double size_values[2];
+
+	size_values[0] = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
+	size_values[1] = capture.get(CV_CAP_PROP_FRAME_WIDTH);
+
+	return size_values;
+}
+
+/*
+	OUTPUT:
+		err_flags[0] true if set height is successful
+		err_flags[1] true if set width is successful
+*/
+bool* CameraDevice::setResolution(double height, double width) {
+	bool err_flags[2];
+
+	err_flags[0] = capture.set(CV_CAP_PROP_FRAME_HEIGHT, height);
+	err_flags[1] = capture.set(CV_CAP_PROP_FRAME_WIDTH, width);
+
+	return err_flags;
+}
