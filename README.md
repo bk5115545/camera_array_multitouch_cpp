@@ -19,6 +19,7 @@ For reference 2 cameras operating at ```640x480``` at ```60 FPS``` is enough to 
 ---
 ## Implementation Steps
 First steps are as follows:
+
 1. Find and tune morphological functions to track hands.
 2. Move tracking into background processing by means of a thread pool.
 3. Find and tune morphological functions for fast feature extraction of frame-by-frame feeds.
