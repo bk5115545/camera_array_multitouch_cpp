@@ -21,12 +21,12 @@ class CameraDevice {
 
 		Frame* getFrame();
 
-		double getFPS();
-		bool setFPS(double value);
+		inline double getFPS();
+		inline bool setFPS(double value);
 
-		std::pair<double, double> getResolution();
-		std::pair<bool, bool> setResolution(double height, double width);
+		inline std::pair<double, double> getResolution();
+		inline std::pair<bool, bool> setResolution(double height, double width);
 
-		double getOpenCVProperty(int prop_id);
-		bool setOpenCVProperty(int prop_id, double value);
+		inline double getOpenCVProperty(int prop_id);
+		inline bool setOpenCVProperty(int prop_id, double value);
 };
