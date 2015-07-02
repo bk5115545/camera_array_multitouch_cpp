@@ -76,20 +76,31 @@ Frame* CameraDevice::decodeFrame(int channel) {
 }
 
 /*
-	Calibrates the camera device
+	Calibrates the camera device based on Chessboard
 
+	::TODO:: Test this code
+	
 	OUTPUT:
 		false if unsuccessful
 */
 bool CameraDevice::calibrate() {
 	cv::Mat mat;
 
-	
-	//std::vector <Point2f> 
-	
+	std::vector<cv::Point2f> corners; // detected corners
+	cv::Size pattern_size(8, 6); // number of interior corners
+
+	// Quickly find a chessboard's corners
 	do {
 		capture.read(mat);
-	} while (!cvFindChessboardCorners());
+	} while (!cv::findChessboardCorners(mat, pattern_size, corners, 
+				cv::CALIB_CB_ADAPTIVE_THRESH	// Uses Adaptive Thresholding to convert to grayscale
+				+ cv::CALIB_CB_NORMALIZE_IMAGE	// Uses equalizeHist for normalization
+				+ cv::CALIB_CB_FAST_CHECK		// Fast check for chessboard
+			));
+
+	// Better approximate the corner positions
+	cv::cornerSubPix(mat, corners, cv::Size(11, 11), cv::Size(-1, -1),
+		cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 }
 
 /*
