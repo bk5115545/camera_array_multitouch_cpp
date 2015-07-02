@@ -35,8 +35,8 @@ void CameraDevice::release() {
 
 
 /*
-Returns a Frame pointer to a frame allocated on the heap.
-You must ensure that this pointer is deleted.
+	Returns a Frame pointer to a frame allocated on the heap.
+	You must ensure that this pointer is deleted.
 */
 Frame* CameraDevice::getFrame() {
 	cv::Mat mat;
@@ -48,6 +48,9 @@ Frame* CameraDevice::getFrame() {
 /*
 	This has been known in the community
 	to not work, but I am testing it.
+
+	OUTPUT:
+		Camera FPS as a double
 */
 inline double CameraDevice::getFPS() {
 	return capture.get(CV_CAP_PROP_FPS);
@@ -56,6 +59,12 @@ inline double CameraDevice::getFPS() {
 /*
 	This has been known in the community
 	to not work, but I am testing it.
+
+	INPUT:
+		FPS as a double
+
+	OUTPUT:
+		false if unsuccessful
 */
 inline bool CameraDevice::setFPS(double value) {
 	return capture.set(CV_CAP_PROP_FPS, value);
@@ -63,23 +72,30 @@ inline bool CameraDevice::setFPS(double value) {
 
 /*
 	OUTPUT:
-		set_values[0] true if get height is successful
-		set_values[1] true if get width is successful
+		set_values[0] false if get height is unsuccessful
+		set_values[1] false if get width is unsuccessful
 */
 inline std::pair<double, double> CameraDevice::getResolution() {
 	return std::pair<double, double>(capture.get(CV_CAP_PROP_FRAME_HEIGHT), capture.get(CV_CAP_PROP_FRAME_WIDTH));
 }
 
 /*
+	INPUT:
+		height as a double
+		width as a double
+
 	OUTPUT:
-		err_flags[0] true if set height is successful
-		err_flags[1] true if set width is successful
+		err_flags[0] false if set height is unsuccessful
+		err_flags[1] false if set width is unsuccessful
 */
 inline std::pair<bool, bool> CameraDevice::setResolution(double height, double width) {
 	return std::pair<bool, bool>(capture.set(CV_CAP_PROP_FRAME_HEIGHT, height), capture.set(CV_CAP_PROP_FRAME_WIDTH, width));
 }
 
 /*
+	INPUT:
+		http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get
+
 	OUTPUT:
 		0 if get was unsuccessful
 */
@@ -88,6 +104,9 @@ inline double CameraDevice::getOpenCVProperty(int prop_id) {
 }
 
 /*
+	INPUT:
+		http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get
+
 	OUTPUT:
 		false if set was unsuccessful
 */
