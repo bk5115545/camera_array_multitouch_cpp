@@ -33,10 +33,9 @@ void CameraDevice::release() {
 	capture.release();
 }
 
-
 /*
-Returns a Frame pointer to a frame allocated on the heap.
-You must ensure that this pointer is deleted.
+	Returns a Frame pointer to a frame allocated on the heap.
+	You must ensure that this pointer is deleted.
 */
 Frame* CameraDevice::getFrame() {
 	cv::Mat mat;
@@ -46,16 +45,91 @@ Frame* CameraDevice::getFrame() {
 }
 
 /*
-	This has been known in the community
-	to not work, but I am testing it.
+	Grabs the next frame but does not decode, useful
+	for decoding for special cameras (such as depth or Kinect)
+	or multi-camera environments
+
+	decodeFrame needs to be called after this to decode.
+
+	OUTPUT:
+		false if unsuccessful
+*/
+bool CameraDevice::grabFrame() {
+	return capture.grab();
+}
+
+/*
+	Decodes a frame based on a channnel
+
+	INPUT:
+		An OpenCV Mat to store the decoded frame
+		An int channel number
+
+	OUTPUT:
+		Frame* to the decoded frame
+*/
+Frame* CameraDevice::decodeFrame(int channel) {
+	cv::Mat mat;
+	capture.retrieve(mat, channel); // ::TODO:: Error Catching
+
+	frame_id %= 3600; //reset ID every minute
+	return new Frame(&mat, camera_id, frame_id++);
+}
+
+/*
+	Calibrates the camera device based on Chessboard
+
+	::TODO:: Test this code
+	
+	OUTPUT:
+		false if unsuccessful
+*/
+bool CameraDevice::calibrate() {
+	cv::Mat mat;
+
+	std::vector<cv::Point2f> corners; // detected corners
+	cv::Size pattern_size(8, 6); // number of interior corners
+
+	// Quickly find a chessboard's corners
+	do {
+		capture.read(mat);
+	} while (!cv::findChessboardCorners(mat, pattern_size, corners, 
+				cv::CALIB_CB_ADAPTIVE_THRESH	// Uses Adaptive Thresholding to convert to grayscale
+				+ cv::CALIB_CB_NORMALIZE_IMAGE	// Uses equalizeHist for normalization
+				+ cv::CALIB_CB_FAST_CHECK		// Fast check for chessboard
+			));
+
+	// Better approximate the corner positions
+	cv::cornerSubPix(mat, corners, cv::Size(11, 11), cv::Size(-1, -1),
+		cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+
+
+
+	return false;
+}
+
+/*
+	Gets the FPS of a camera
+
+	::TODO:: Test on a video feed
+
+	OUTPUT:
+		Camera FPS as a double
 */
 inline double CameraDevice::getFPS() {
 	return capture.get(CV_CAP_PROP_FPS);
 }
 
 /*
-	This has been known in the community
-	to not work, but I am testing it.
+	Sets the FPS of a camera
+
+	::TODO:: Test on a video feed
+
+	INPUT:
+		FPS as a double
+
+	OUTPUT:
+		false if unsuccessful
 */
 inline bool CameraDevice::setFPS(double value) {
 	return capture.set(CV_CAP_PROP_FPS, value);
@@ -63,26 +137,44 @@ inline bool CameraDevice::setFPS(double value) {
 
 /*
 	OUTPUT:
-		set_values[0] true if get height is successful
-		set_values[1] true if get width is successful
+		set_values[0] false if get height is unsuccessful
+		set_values[1] false if get width is unsuccessful
 */
 inline std::pair<double, double> CameraDevice::getResolution() {
 	return std::pair<double, double>(capture.get(CV_CAP_PROP_FRAME_HEIGHT), capture.get(CV_CAP_PROP_FRAME_WIDTH));
 }
 
 /*
+	INPUT:
+		height as a double
+		width as a double
+
 	OUTPUT:
-		err_flags[0] true if set height is successful
-		err_flags[1] true if set width is successful
+		err_flags[0] false if set height is unsuccessful
+		err_flags[1] false if set width is unsuccessful
 */
 inline std::pair<bool, bool> CameraDevice::setResolution(double height, double width) {
 	return std::pair<bool, bool>(capture.set(CV_CAP_PROP_FRAME_HEIGHT, height), capture.set(CV_CAP_PROP_FRAME_WIDTH, width));
 }
 
+/*
+	INPUT:
+		http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get
+
+	OUTPUT:
+		0 if get was unsuccessful
+*/
 inline double CameraDevice::getOpenCVProperty(int prop_id) {
 	return capture.get(prop_id); //::TODO:: Do error catching
 }
 
+/*
+	INPUT:
+		http://docs.opencv.org/modules/highgui/doc/reading_and_writing_images_and_video.html#videocapture-get
+
+	OUTPUT:
+		false if set was unsuccessful
+*/
 inline bool CameraDevice::setOpenCVProperty(int prop_id, double value) {
-	return capture.set(prop_id, value);  //::TODO:: Do error catching
+	return capture.set(prop_id, value);
 }

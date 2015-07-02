@@ -1,9 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-
 #include "Frame.h"
 
-#include <memory>
 class CameraDevice {
 
 	private:
@@ -20,6 +18,11 @@ class CameraDevice {
 		void release();
 
 		Frame* getFrame();
+		
+		bool grabFrame();
+		Frame* decodeFrame(int channel=0);
+
+		bool calibrate();
 
 		inline double getFPS();
 		inline bool setFPS(double value);

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <thread>
-#include <memory>
+
 #include <boost/lockfree/queue.hpp>
 #include "Frame.h"
 
