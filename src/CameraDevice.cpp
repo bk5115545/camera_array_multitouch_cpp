@@ -76,8 +76,9 @@ Frame* CameraDevice::decodeFrame(int channel) {
 }
 
 /*
-	This has been known in the community
-	to not work, but I am testing it.
+	Gets the FPS of a camera
+
+	::TODO:: Test on a video feed
 
 	OUTPUT:
 		Camera FPS as a double
@@ -87,8 +88,9 @@ inline double CameraDevice::getFPS() {
 }
 
 /*
-	This has been known in the community
-	to not work, but I am testing it.
+	Sets the FPS of a camera
+
+	::TODO:: Test on a video feed
 
 	INPUT:
 		FPS as a double
