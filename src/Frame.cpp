@@ -13,9 +13,6 @@ Frame::Frame(cv::Mat* source, int camera_id, int frame_id) {
 	this->_frame_id = frame_id;
 }
 
-Frame::~Frame() {
-
-}
 
 cv::Mat Frame::getData() {
 	return _frame;

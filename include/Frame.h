@@ -14,7 +14,6 @@ class Frame {
 	public:
 		Frame();
 		Frame(cv::Mat* source, int camera_id, int frame_id);
-		~Frame();
 
 		cv::Mat getData();
 		int getCameraID();

@@ -1,9 +1,11 @@
+#include <thread>
+#include <memory>
 #include <opencv2/opencv.hpp>
 
-#include <thread>
 #include "CameraDevice.h"
 #include "Transformer.h"
 #include "Frame.h"
+
 
 /*
 int useMotionEstimation() {
@@ -47,21 +49,24 @@ int main(char* argsv, char argc) {
 	CameraDevice dev(2);
 
 	if (!dev.acquire()) return 1;
-
+	cv::namedWindow("testing", 1);
 	Transformer tr(1);// = new Transformer(1);
 
 	while (true) {
-		Frame* inputFrame = dev.getFrame(); //implicit copy so we can get a new frame in the background
-		std::cout << "c " << inputFrame->getCameraID() << " f " << inputFrame->getID()
-			<< "\n";
-		tr.enqueue(inputFrame); //implicit copy because we can't guarantee that the frame is available when it's processed
+		Frame* inputFrame = dev.getFrame();
+		//std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
+		std::cout<< tr.enqueue(inputFrame) <<std::endl; 
 
 		Frame* frame = nullptr;
 
 		if (tr.popResult(frame)) {
 			cv::imshow("testing", frame->getData());
+			if(cv::waitKey(27)) break;
 		}
-		//if (cv::waitKey(27)) break;
+
+		delete inputFrame; //allocated with new
+		if(frame != nullptr) delete frame; //i guess this could happen
+		
 	}
 
 	return 0;

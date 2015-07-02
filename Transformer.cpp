@@ -1,32 +1,30 @@
 #include "Transformer.h"
+#include <algorithm>
 
 std::atomic<int> Transformer::class_threads = 0;
 
-Transformer::Transformer(int thread_count) {
+Transformer::Transformer(int thread_count) : jobs(1000), results(1000) {
 	max_threads = thread_count;
 	instance_threads = 0;
 	job_count = 0;
 
-	jobs = new boost::lockfree::queue<Frame*>(1000);
-	results = new boost::lockfree::queue<Frame*>(1000);
 	threads = std::vector<std::thread*>();
 }
 
 Transformer::~Transformer() {
-	delete jobs;
-	delete results;
+
 }
 
 void Transformer::run() {
 
 	while (job_count.fetch_add(-1) > 0) { //TODO check that this works correctly
-		Frame* raw;
-		if (!jobs->pop(raw)) {
+		Frame* raw = nullptr;
+		if (!jobs.pop(raw)) {
 			
 			std::cout << "Error no job for thread." << std::endl;
 			break;
 		}
-
+		//std::unique_ptr<Frame> raw = std::make_unique<Frame>(fr);
 		cv::Mat frame = raw->getData();
 		
 		cv::vector<cv::vector<cv::Point>> contours;
@@ -65,7 +63,7 @@ void Transformer::run() {
 			cv::vector<cv::vector<cv::Point>> interestingContours;
 
 			for (unsigned int i = 1; i < contours.size(); i++) {
-				printf("area:\t%f\n", cv::contourArea(contours[i]));
+				//printf("area:\t%f\n", cv::contourArea(contours[i]));
 				if (cv::contourArea(contours[i]) > 10000) {
 					interestingContours.push_back(contours[i]);
 				}
@@ -78,13 +76,23 @@ void Transformer::run() {
 			}
 
 			// ::TODO:: Trace for memory leak
-			results->push(new Frame(&interestingContour, raw->getCameraID(), raw->getID()));
+			results.push(new Frame(&interestingContour, raw->getCameraID(), raw->getID()));
 			//cv::imshow(std::string("Camera ") + std::to_string(raw->getCameraID()), interestingContour);
 		}
+
+		delete raw; //was allocated with new
 
 	}
 	class_threads--;
 	instance_threads--;
+	//this be my magic lambda of DOOOOMMMMMMMmmmmmm!
+	threads.erase(std::find_if(threads.begin(), threads.end(), 
+		[=](std::thread const* thread) {
+		return std::this_thread::get_id() == thread->get_id();
+	}));
+	//don't touch it but it might be good to check that this thread hasn't been mistakenly deleted by another thread
+	//because windows reuses thread_ids.  it's probably not possible
+	return;
 }
 
 int Transformer::totalTransformerThreads() {
@@ -93,25 +101,22 @@ int Transformer::totalTransformerThreads() {
 
 int Transformer::enqueue(Frame* frame) {
 	// ::TODO:: Trace for memory leak
-	//jobs->push(new Frame(&frame->getData(), frame->getCameraID(), frame->getID()));
-	while (!jobs->push(frame))
-		;
-
+	jobs.push(new Frame(&frame->getData(), frame->getCameraID(), frame->getID()));
+	
 	job_count++;
 
 	if (instance_threads < job_count && instance_threads < max_threads) {
 		std::thread* newThread = new std::thread([=] { run(); });
 		threads.push_back(newThread);
-		//std::thread([=] { run(); });
 		instance_threads++;
 		class_threads++;
 	}
-
-	return 0;//job_count/(instance_threads + 1);
+	
+	return job_count/(instance_threads + 1);
 }
 
-bool Transformer::popResult(Frame*& into, bool blocking) {
-	return results->pop(into);
+bool Transformer::popResult(Frame*& into) {
+	return results.pop(into);
 }
 
 
@@ -120,11 +125,11 @@ std::vector<Frame*> Transformer::stop_threads() {
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	std::vector<Frame*> unfinished_jobs;
 
-	bool has_job = jobs->empty();
+	bool has_job = jobs.empty();
 
 	while (has_job) {
 		Frame* frame;
-		jobs->unsynchronized_pop(frame);
+		jobs.unsynchronized_pop(frame);
 		unfinished_jobs.push_back(frame);
 	}
 

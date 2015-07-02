@@ -2,14 +2,15 @@
 
 #include <vector>
 #include <thread>
+#include <memory>
 #include <boost/lockfree/queue.hpp>
 #include "Frame.h"
 
 class Transformer {
 
 	private:
-		boost::lockfree::queue<Frame*>* jobs;
-		boost::lockfree::queue<Frame*>* results;
+		boost::lockfree::queue<Frame*> jobs;
+		boost::lockfree::queue<Frame*> results;
 
 		static std::atomic<int> class_threads;
 
@@ -29,6 +30,6 @@ class Transformer {
 		int totalTransformerThreads();
 		int enqueue(Frame* frame);
 
-		bool popResult(Frame*& into, bool blocking = false);
+		bool popResult(Frame*& into);
 
 };

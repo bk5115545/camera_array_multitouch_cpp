@@ -1,5 +1,6 @@
 #include "CameraDevice.h"
 
+
 CameraDevice::CameraDevice(int camera_id)
 	: camera_id(camera_id)
 	, frame_id(0)
@@ -32,12 +33,16 @@ void CameraDevice::release() {
 	capture.release();
 }
 
+
+/*
+Returns a Frame pointer to a frame allocated on the heap.
+You must ensure that this pointer is deleted.
+*/
 Frame* CameraDevice::getFrame() {
 	cv::Mat mat;
 	capture.read(mat);
 	frame_id %= 3600; //reset ID every minute
-	return new Frame(&mat, camera_id, frame_id++); // ::TODO:: Trace for memory leak
-
+	return new Frame(&mat, camera_id, frame_id++); 
 }
 
 /*

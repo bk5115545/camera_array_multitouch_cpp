@@ -3,7 +3,7 @@
 
 #include "Frame.h"
 
-
+#include <memory>
 class CameraDevice {
 
 	private:
