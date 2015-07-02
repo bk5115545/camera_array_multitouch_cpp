@@ -1,6 +1,5 @@
 #include "CameraDevice.h"
 
-
 CameraDevice::CameraDevice(int camera_id)
 	: camera_id(camera_id)
 	, frame_id(0)
@@ -33,7 +32,6 @@ void CameraDevice::release() {
 	capture.release();
 }
 
-
 /*
 	Returns a Frame pointer to a frame allocated on the heap.
 	You must ensure that this pointer is deleted.
@@ -43,6 +41,38 @@ Frame* CameraDevice::getFrame() {
 	capture.read(mat);
 	frame_id %= 3600; //reset ID every minute
 	return new Frame(&mat, camera_id, frame_id++); 
+}
+
+/*
+	Grabs the next frame but does not decode, useful
+	for decoding for special cameras (such as depth or Kinect)
+	or multi-camera environments
+
+	decodeFrame needs to be called after this to decode.
+
+	OUTPUT:
+		false if unsuccessful
+*/
+bool CameraDevice::grabFrame() {
+	return capture.grab();
+}
+
+/*
+	Decodes a frame based on a channnel
+
+	INPUT:
+		An OpenCV Mat to store the decoded frame
+		An int channel number
+
+	OUTPUT:
+		Frame* to the decoded frame
+*/
+Frame* CameraDevice::decodeFrame(int channel) {
+	cv::Mat mat;
+	capture.retrieve(mat, channel); // ::TODO:: Error Catching
+
+	frame_id %= 3600; //reset ID every minute
+	return new Frame(&mat, camera_id, frame_id++);
 }
 
 /*

@@ -20,6 +20,9 @@ class CameraDevice {
 		void release();
 
 		Frame* getFrame();
+		
+		bool grabFrame();
+		Frame* decodeFrame(int channel=0);
 
 		inline double getFPS();
 		inline bool setFPS(double value);
