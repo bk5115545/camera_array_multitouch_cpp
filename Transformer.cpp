@@ -1,9 +1,10 @@
 #include "Transformer.h"
 #include <algorithm>
+#include "vld.h"
 
 std::atomic<int> Transformer::class_threads = 0;
 
-Transformer::Transformer(int thread_count) : jobs(1000), results(1000) {
+Transformer::Transformer(int thread_count) : jobs(60), results(60) {
 	max_threads = thread_count;
 	instance_threads = 0;
 	job_count = 0;
@@ -16,7 +17,7 @@ Transformer::~Transformer() {
 }
 
 void Transformer::run() {
-
+	
 	while (job_count.fetch_add(-1) > 0) { //TODO check that this works correctly
 		Frame* raw = nullptr;
 		if (!jobs.pop(raw)) {
@@ -26,14 +27,15 @@ void Transformer::run() {
 		}
 		//std::unique_ptr<Frame> raw = std::make_unique<Frame>(fr);
 		cv::Mat frame = raw->getData();
-		
+		results.push(new Frame(&frame,raw->getCameraID(),raw->getID()));
+
 		cv::vector<cv::vector<cv::Point>> contours;
 		cvtColor(frame, frame, CV_BGR2HSV);
 		cv::inRange(frame, cv::Scalar(0, 48, 80), cv::Scalar(20, 255, 255), frame);
 		//cv::inRange(frame, cv::Scalar(0, 49, 38), cv::Scalar(19, 121, 255), frame);
 		//cv::inRange(frame, cv::Scalar(cv::getTrackbarPos("H-Low", "Parameters"), cv::getTrackbarPos("S-Low", "Parameters"), cv::getTrackbarPos("V-Low", "Parameters")), 
 		//				   cv::Scalar(cv::getTrackbarPos("H-High", "Parameters"), cv::getTrackbarPos("S-High", "Parameters"), cv::getTrackbarPos("V-High", "Parameters")), frame);
-		//cv::imshow("range", frame);
+
 
 		//clean it up
 		cv::dilate(frame, frame, cv::Mat(), cv::Point(-1, -1), 2, 1);
@@ -75,9 +77,7 @@ void Transformer::run() {
 				cv::drawContours(interestingContour, interestingContours, -1, cv::Scalar(255, 0, 255), 2, 8);
 			}
 
-			// ::TODO:: Trace for memory leak
-			results.push(new Frame(&interestingContour, raw->getCameraID(), raw->getID()));
-			//cv::imshow(std::string("Camera ") + std::to_string(raw->getCameraID()), interestingContour);
+			//results.push(new Frame(&interestingContour,raw->getCameraID(),raw->getID()));
 		}
 
 		delete raw; //was allocated with new
@@ -87,7 +87,8 @@ void Transformer::run() {
 	instance_threads--;
 	//this be my magic lambda of DOOOOMMMMMMMmmmmmm!
 	threads.erase(std::find_if(threads.begin(), threads.end(), 
-		[=](std::thread const* thread) {
+		[=](std::thread* thread) {
+		//if(std::this_thread::get_id() == thread->get_id()) thread->detach();
 		return std::this_thread::get_id() == thread->get_id();
 	}));
 	//don't touch it but it might be good to check that this thread hasn't been mistakenly deleted by another thread
@@ -100,7 +101,6 @@ int Transformer::totalTransformerThreads() {
 }
 
 int Transformer::enqueue(Frame* frame) {
-	// ::TODO:: Trace for memory leak
 	jobs.push(new Frame(&frame->getData(), frame->getCameraID(), frame->getID()));
 	
 	job_count++;
@@ -111,8 +111,12 @@ int Transformer::enqueue(Frame* frame) {
 		instance_threads++;
 		class_threads++;
 	}
-	
-	return job_count/(instance_threads + 1);
+	int x = 0;
+	if(instance_threads > 0) {
+		x = instance_threads;
+	}
+	else x = 1;
+	return job_count/x;
 }
 
 bool Transformer::popResult(Frame*& into) {

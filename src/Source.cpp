@@ -6,6 +6,7 @@
 #include "Transformer.h"
 #include "Frame.h"
 
+#include "vld.h"
 
 /*
 int useMotionEstimation() {
@@ -49,20 +50,23 @@ int main(char* argsv, char argc) {
 	CameraDevice dev(2);
 
 	if (!dev.acquire()) return 1;
-	cv::namedWindow("testing", 1);
-	Transformer tr(1);// = new Transformer(1);
-
+	
+	Transformer tr(2);// = new Transformer(1);
+	cv::namedWindow("testing",1);
 	while (true) {
 		Frame* inputFrame = dev.getFrame();
 		//std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
-		std::cout<< tr.enqueue(inputFrame) <<std::endl; 
+		int res = tr.enqueue(inputFrame);
+		if(res >= 0)
+			std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;
 
 		Frame* frame = nullptr;
 
 		if (tr.popResult(frame)) {
-			cv::imshow("testing", frame->getData());
-			if(cv::waitKey(27)) break;
+			cv::imshow("testing",frame->getData());
+			if(cv::waitKey(27) >= 0) break;
 		}
+		
 
 		delete inputFrame; //allocated with new
 		if(frame != nullptr) delete frame; //i guess this could happen

@@ -1,5 +1,5 @@
 #include "CameraDevice.h"
-
+#include "vld.h"
 
 CameraDevice::CameraDevice(int camera_id)
 	: camera_id(camera_id)
