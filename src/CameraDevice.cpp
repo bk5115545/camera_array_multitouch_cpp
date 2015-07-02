@@ -76,6 +76,23 @@ Frame* CameraDevice::decodeFrame(int channel) {
 }
 
 /*
+	Calibrates the camera device
+
+	OUTPUT:
+		false if unsuccessful
+*/
+bool CameraDevice::calibrate() {
+	cv::Mat mat;
+
+	
+	//std::vector <Point2f> 
+	
+	do {
+		capture.read(mat);
+	} while (!cvFindChessboardCorners());
+}
+
+/*
 	Gets the FPS of a camera
 
 	::TODO:: Test on a video feed
