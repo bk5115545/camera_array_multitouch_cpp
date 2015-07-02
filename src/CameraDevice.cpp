@@ -79,10 +79,18 @@ inline std::pair<bool, bool> CameraDevice::setResolution(double height, double w
 	return std::pair<bool, bool>(capture.set(CV_CAP_PROP_FRAME_HEIGHT, height), capture.set(CV_CAP_PROP_FRAME_WIDTH, width));
 }
 
+/*
+	OUTPUT:
+		0 if get was unsuccessful
+*/
 inline double CameraDevice::getOpenCVProperty(int prop_id) {
 	return capture.get(prop_id); //::TODO:: Do error catching
 }
 
+/*
+	OUTPUT:
+		false if set was unsuccessful
+*/
 inline bool CameraDevice::setOpenCVProperty(int prop_id, double value) {
-	return capture.set(prop_id, value);  //::TODO:: Do error catching
+	return capture.set(prop_id, value);
 }
