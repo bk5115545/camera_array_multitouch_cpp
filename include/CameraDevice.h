@@ -21,6 +21,7 @@ class CameraDevice {
 		
 		bool grabFrame();
 		Frame* decodeFrame(int channel=0);
+		int getID();
 
 		bool calibrate();
 

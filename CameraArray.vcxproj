@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h" />
+    <ClInclude Include="include\concurrentqueue.h" />
     <ClInclude Include="include\Frame.h" />
     <ClInclude Include="include\Transformer.h" />
   </ItemGroup>

@@ -51,8 +51,8 @@ int main(char* argsv, char argc) {
 
 	if (!dev.acquire()) return 1;
 	
-	Transformer tr(2);// = new Transformer(1);
-	cv::namedWindow("testing",1);
+	Transformer tr(4);// = new Transformer(1);
+	//cv::namedWindow("testing " + std::to_string(dev.getID()),1);
 	while (true) {
 		Frame* inputFrame = dev.getFrame();
 		//std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
@@ -63,12 +63,12 @@ int main(char* argsv, char argc) {
 		Frame* frame = nullptr;
 
 		if (tr.popResult(frame)) {
-			cv::imshow("testing",frame->getData());
-			if(cv::waitKey(27) >= 0) break;
+			cv::imshow("testing " + std::to_string(frame->getCameraID()),frame->getData());
+			if(cv::waitKey(30) >= 0) break;
 		}
 		
 
-		delete inputFrame; //allocated with new
+		//delete inputFrame; //allocated with new
 		if(frame != nullptr) delete frame; //i guess this could happen
 		
 	}

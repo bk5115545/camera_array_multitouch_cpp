@@ -7,15 +7,15 @@ Frame::Frame() {
 	_frame_id = -1;
 } 
 
-Frame::Frame(cv::Mat* source, int camera_id, int frame_id) {
-	source->assignTo(_frame);
+Frame::Frame(cv::Mat& source, int camera_id, int frame_id) {
+	source.assignTo(_frame);
 	//_frame = *source;
 	this->_camera_id = camera_id;
 	this->_frame_id = frame_id;
 }
 
 
-cv::Mat Frame::getData() {
+cv::Mat& Frame::getData() {
 	return _frame;
 }
 

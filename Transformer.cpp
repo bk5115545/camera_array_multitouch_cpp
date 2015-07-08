@@ -19,15 +19,18 @@ Transformer::~Transformer() {
 void Transformer::run() {
 	
 	while (job_count.fetch_add(-1) > 0) { //TODO check that this works correctly
-		Frame* raw = nullptr;
-		if (!jobs.pop(raw)) {
+		Frame raw;
+		jobs.try_dequeue(raw);
 			
-			std::cout << "Error no job for thread." << std::endl;
-			break;
-		}
+			
+		
 		//std::unique_ptr<Frame> raw = std::make_unique<Frame>(fr);
-		cv::Mat frame = raw->getData();
-		results.push(new Frame(&frame,raw->getCameraID(),raw->getID()));
+		
+
+		cv::Mat frame = raw.getData();
+		results.enqueue(raw);
+		//results.push(new Frame(frame,raw->getCameraID(),raw->getID()));
+		
 
 		cv::vector<cv::vector<cv::Point>> contours;
 		cvtColor(frame, frame, CV_BGR2HSV);
@@ -80,8 +83,6 @@ void Transformer::run() {
 			//results.push(new Frame(&interestingContour,raw->getCameraID(),raw->getID()));
 		}
 
-		delete raw; //was allocated with new
-
 	}
 	class_threads--;
 	instance_threads--;
@@ -100,9 +101,10 @@ int Transformer::totalTransformerThreads() {
 	return class_threads;
 }
 
-int Transformer::enqueue(Frame* frame) {
-	jobs.push(new Frame(&frame->getData(), frame->getCameraID(), frame->getID()));
-	
+int Transformer::enqueue(Frame&& frame) {
+	//cv::Mat mat = frame->getData();
+	jobs.enqueue(frame);
+	//new Frame(mat, frame->getCameraID(), frame->getID())
 	job_count++;
 
 	if (instance_threads < job_count && instance_threads < max_threads) {
@@ -120,7 +122,7 @@ int Transformer::enqueue(Frame* frame) {
 }
 
 bool Transformer::popResult(Frame*& into) {
-	return results.pop(into);
+	return results.try_dequeue(into);
 }
 
 
@@ -129,11 +131,11 @@ std::vector<Frame*> Transformer::stop_threads() {
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	std::vector<Frame*> unfinished_jobs;
 
-	bool has_job = jobs.empty();
+	bool has_job = jobs.size_approx() > 0;
 
 	while (has_job) {
 		Frame* frame;
-		jobs.unsynchronized_pop(frame);
+		jobs.try_dequeue(frame);
 		unfinished_jobs.push_back(frame);
 	}
 

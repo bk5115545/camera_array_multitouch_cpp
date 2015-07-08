@@ -22,7 +22,7 @@ bool CameraDevice::acquire() {
 		acquired = true;
 		return true;
 	}
-
+	
 	return false;
 }
 
@@ -41,7 +41,7 @@ Frame* CameraDevice::getFrame() {
 	cv::Mat mat;
 	capture.read(mat);
 	frame_id %= 3600; //reset ID every minute
-	return new Frame(&mat, camera_id, frame_id++); 
+	return new Frame(mat, camera_id, frame_id++); 
 }
 
 /*
@@ -73,7 +73,11 @@ Frame* CameraDevice::decodeFrame(int channel) {
 	capture.retrieve(mat, channel); // ::TODO:: Error Catching
 
 	frame_id %= 3600; //reset ID every minute
-	return new Frame(&mat, camera_id, frame_id++);
+	return new Frame(mat, camera_id, frame_id++);
+}
+
+int CameraDevice::getID() {
+	return camera_id;
 }
 
 /*

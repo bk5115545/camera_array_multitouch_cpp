@@ -3,14 +3,14 @@
 #include <vector>
 #include <thread>
 
-#include <boost/lockfree/queue.hpp>
+#include "concurrentqueue.h"
 #include "Frame.h"
 
 class Transformer {
 
 	private:
-		boost::lockfree::queue<Frame*> jobs;
-		boost::lockfree::queue<Frame*> results;
+		moodycamel::ConcurrentQueue<Frame> jobs;
+		moodycamel::ConcurrentQueue<Frame> results;
 
 		static std::atomic<int> class_threads;
 
@@ -28,7 +28,7 @@ class Transformer {
 		std::vector<Frame*> stop_threads();
 		
 		int totalTransformerThreads();
-		int enqueue(Frame* frame);
+		int enqueue(Frame&& frame);
 
 		bool popResult(Frame*& into);
 
