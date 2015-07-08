@@ -1,5 +1,5 @@
 #include "CameraDevice.h"
-#include "vld.h"
+//#include "vld.h"
 
 CameraDevice::CameraDevice(int camera_id)
 	: camera_id(camera_id)
@@ -84,28 +84,38 @@ Frame* CameraDevice::decodeFrame(int channel) {
 	OUTPUT:
 		false if unsuccessful
 */
-bool CameraDevice::calibrate() {
+bool CameraDevice::calibrate_lens() {
 	cv::Mat mat;
 
 	std::vector<cv::Point2f> corners; // detected corners
 	cv::Size pattern_size(8, 6); // number of interior corners
 
 	// Quickly find a chessboard's corners
+	// or try for 100 frames.
+	int max_iterations = 1000;
+	int cur_iteration = 0;
+	
 	do {
 		capture.read(mat);
+		cur_iteration++;
 	} while (!cv::findChessboardCorners(mat, pattern_size, corners, 
 				cv::CALIB_CB_ADAPTIVE_THRESH	// Uses Adaptive Thresholding to convert to grayscale
 				+ cv::CALIB_CB_NORMALIZE_IMAGE	// Uses equalizeHist for normalization
 				+ cv::CALIB_CB_FAST_CHECK		// Fast check for chessboard
-			));
+			) || cur_iteration >= max_iterations
+			);
+
+	// if no chessboard was found
+	if (cur_iteration == max_iterations)
+		return false;
 
 	// Better approximate the corner positions
 	cv::cornerSubPix(mat, corners, cv::Size(11, 11), cv::Size(-1, -1),
 		cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 
+	//cv::calibrateCamera();
 
-
-	return false;
+	return true;
 }
 
 /*

@@ -22,7 +22,7 @@ class CameraDevice {
 		bool grabFrame();
 		Frame* decodeFrame(int channel=0);
 
-		bool calibrate();
+		bool calibrate_lens();
 
 		inline double getFPS();
 		inline bool setFPS(double value);

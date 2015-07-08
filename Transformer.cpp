@@ -1,6 +1,7 @@
 #include "Transformer.h"
 #include <algorithm>
-#include "vld.h"
+
+//#include "vld.h"
 
 std::atomic<int> Transformer::class_threads = 0;
 

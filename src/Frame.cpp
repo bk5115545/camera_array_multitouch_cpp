@@ -1,5 +1,6 @@
 #include "Frame.h"
-#include "vld.h"
+
+//#include "vld.h"
 
 Frame::Frame() {
 	_frame = cv::Mat::zeros(cv::Size(640, 480), 3);
