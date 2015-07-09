@@ -37,11 +37,11 @@ void CameraDevice::release() {
 	Returns a Frame pointer to a frame allocated on the heap.
 	You must ensure that this pointer is deleted.
 */
-Frame* CameraDevice::getFrame() {
+std::shared_ptr<Frame> CameraDevice::getFrame() {
 	cv::Mat mat;
 	capture.read(mat);
 	frame_id %= 3600; //reset ID every minute
-	return new Frame(mat, camera_id, frame_id++); 
+	return std::make_shared<Frame>(Frame(mat, camera_id, frame_id++)); 
 }
 
 /*
@@ -68,12 +68,12 @@ bool CameraDevice::grabFrame() {
 	OUTPUT:
 		Frame* to the decoded frame
 */
-Frame* CameraDevice::decodeFrame(int channel) {
+std::shared_ptr<Frame> CameraDevice::decodeFrame(int channel) {
 	cv::Mat mat;
 	capture.retrieve(mat, channel); // ::TODO:: Error Catching
 
 	frame_id %= 3600; //reset ID every minute
-	return new Frame(mat, camera_id, frame_id++);
+	return std::make_shared<Frame>(Frame(mat, camera_id, frame_id++));
 }
 
 int CameraDevice::getID() {

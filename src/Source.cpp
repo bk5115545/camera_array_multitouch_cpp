@@ -52,24 +52,23 @@ int main(char* argsv, char argc) {
 	if (!dev.acquire()) return 1;
 	
 	Transformer tr(4);// = new Transformer(1);
-	//cv::namedWindow("testing " + std::to_string(dev.getID()),1);
+	cv::namedWindow("testing " + std::to_string(dev.getID()),1);
 	while (true) {
-		Frame* inputFrame = dev.getFrame();
-		//std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
-		int res = tr.enqueue(inputFrame);
-		if(res >= 0)
-			std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;
-
-		Frame* frame = nullptr;
-
-		if (tr.popResult(frame)) {
-			cv::imshow("testing " + std::to_string(frame->getCameraID()),frame->getData());
-			if(cv::waitKey(30) >= 0) break;
-		}
+		std::shared_ptr<Frame> inputFrame = dev.getFrame();
 		
+		std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
+		int res = tr.enqueue(inputFrame);
 
-		//delete inputFrame; //allocated with new
-		if(frame != nullptr) delete frame; //i guess this could happen
+		
+		
+		std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;
+
+		std::shared_ptr<Frame> result = tr.popResult();
+		
+		if(result != nullptr) {
+			cv::imshow("testing " + std::to_string(dev.getID()),result->getData());
+			if(cv::waitKey(27) >= 0) break;
+		}
 		
 	}
 

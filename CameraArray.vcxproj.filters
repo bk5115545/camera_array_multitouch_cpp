@@ -24,7 +24,7 @@
     <ClCompile Include="src\Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Transformer.cpp">
+    <ClCompile Include="src\Transformer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <ClInclude Include="include\Transformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\concurrentqueue.h">
+    <ClInclude Include="include\SharedConcurrentQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

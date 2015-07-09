@@ -2,21 +2,25 @@
 
 #include <vector>
 #include <thread>
+#include <memory>
+#include <atomic>
 
-#include "concurrentqueue.h"
+#include "SharedConcurrentQueue.h"
 #include "Frame.h"
 
 class Transformer {
 
 	private:
-		moodycamel::ConcurrentQueue<Frame> jobs;
-		moodycamel::ConcurrentQueue<Frame> results;
+		concurrent_queue<std::shared_ptr<Frame>> jobs;
+		concurrent_queue<std::shared_ptr<Frame>> results;
 
 		static std::atomic<int> class_threads;
 
 		std::atomic<int> instance_threads;
 		std::atomic<int> max_threads;
 		std::atomic<int> job_count;
+
+		bool running = true;
 		
 		std::vector<std::thread*> threads;
 
@@ -28,8 +32,8 @@ class Transformer {
 		std::vector<Frame*> stop_threads();
 		
 		int totalTransformerThreads();
-		int enqueue(Frame&& frame);
+		int enqueue(std::shared_ptr<Frame> frame);
 
-		bool popResult(Frame*& into);
+		std::shared_ptr<Frame> popResult();
 
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <string>
-
+#include <memory>
 
 class Frame {
 
@@ -12,10 +12,10 @@ class Frame {
 
 	public:
 		Frame();
-		Frame(cv::Mat& source, int camera_id, int frame_id);
+		Frame(cv::Mat source, int camera_id, int frame_id);
 		
 
-		cv::Mat& getData();
+		cv::Mat getData();
 		int getCameraID();
 		int getID();
 

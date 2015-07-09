@@ -1,5 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <memory>
+
 #include "Frame.h"
 
 class CameraDevice {
@@ -17,10 +19,10 @@ class CameraDevice {
 		bool acquire();
 		void release();
 
-		Frame* getFrame();
+		std::shared_ptr<Frame> getFrame();
 		
 		bool grabFrame();
-		Frame* decodeFrame(int channel=0);
+		std::shared_ptr<Frame> decodeFrame(int channel=0);
 		int getID();
 
 		bool calibrate();
