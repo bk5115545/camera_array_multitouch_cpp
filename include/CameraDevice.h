@@ -25,7 +25,7 @@ class CameraDevice {
 		std::shared_ptr<Frame> decodeFrame(int channel=0);
 		int getID();
 
-		bool calibrate();
+		bool calibrate_lens();
 
 		inline double getFPS();
 		inline bool setFPS(double value);

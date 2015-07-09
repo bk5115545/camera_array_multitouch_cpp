@@ -6,7 +6,7 @@
 #include "Transformer.h"
 #include "Frame.h"
 
-#include "vld.h"
+//#include "vld.h"
 
 /*
 int useMotionEstimation() {

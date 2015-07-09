@@ -1,5 +1,6 @@
 #include "Frame.h"
-#include "vld.h"
+
+//#include "vld.h"
 
 Frame::Frame() {
 	_camera_id = -1;
