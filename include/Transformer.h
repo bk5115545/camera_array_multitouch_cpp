@@ -53,11 +53,10 @@ class Transformer {
 			//this be my magic lambda of DOOOOMMMMMMMmmmmmm!
 			threads.erase(std::find_if(threads.begin(),threads.end(),
 				[=](std::thread* thread) {
-				//if(std::this_thread::get_id() == thread->get_id()) thread->detach();
 				return std::this_thread::get_id() == thread->get_id();
 			}));
 			//don't touch it but it might be good to check that this thread hasn't been mistakenly deleted by another thread
-			//because windows reuses thread_ids.  it's probably not possible
+			//because windows reuses thread_ids.  it's probably not possible but meh.  ::TODO:: check this
 		}
 		std::vector<Frame*> stop_threads() {
 			running = false;
