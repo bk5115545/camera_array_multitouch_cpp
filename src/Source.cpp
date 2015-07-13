@@ -5,6 +5,7 @@
 #include "CameraDevice.h"
 #include "Transformer.h"
 #include "Frame.h"
+#include "ContourProcessor.h"
 
 //#include "vld.h"
 
@@ -47,12 +48,13 @@ int useMotionEstimation() {
 */
 
 int main(char* argsv, char argc) {
-	CameraDevice dev(2);
+	CameraDevice dev(1);
 
 	if (!dev.acquire()) return 1;
 	
-	Transformer tr(4);// = new Transformer(1);
+	Transformer<ContourProcessor> tr(2);
 	cv::namedWindow("testing " + std::to_string(dev.getID()),1);
+
 	while (true) {
 		std::shared_ptr<Frame> inputFrame = dev.getFrame();
 		
