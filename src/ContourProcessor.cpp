@@ -60,4 +60,7 @@ std::shared_ptr<Frame> ContourProcessor::run(std::shared_ptr<Frame> f) {
 	}
 	return std::shared_ptr<Frame>(nullptr);
 }
-	
+
+void ContourProcessor::setTrackingID(int id,cv::Point hsl_low,cv::Point hsl_high) {
+	trackedParameters[id] = std::pair<cv::Point,cv::Point>(hsl_low,hsl_high);
+}

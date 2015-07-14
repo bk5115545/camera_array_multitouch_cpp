@@ -41,10 +41,16 @@
     <ClInclude Include="include\SharedConcurrentQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ContourProcessor.h">
+    <ClInclude Include="include\Processor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Processor.h">
+    <ClInclude Include="include\ContourProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BlobProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FeatureContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

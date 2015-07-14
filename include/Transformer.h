@@ -58,6 +58,7 @@ class Transformer {
 			//don't touch it but it might be good to check that this thread hasn't been mistakenly deleted by another thread
 			//because windows reuses thread_ids.  it's probably not possible but meh.  ::TODO:: check this
 		}
+
 		std::vector<Frame*> stop_threads() {
 			running = false;
 

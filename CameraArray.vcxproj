@@ -84,8 +84,10 @@
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ContourProcessor.h" />
+    <ClInclude Include="include\BlobProcessor.h" />
     <ClInclude Include="include\CameraDevice.h" />
+    <ClInclude Include="include\ContourProcessor.h" />
+    <ClInclude Include="include\FeatureContainer.h" />
     <ClInclude Include="include\Frame.h" />
     <ClInclude Include="include\Processor.h" />
     <ClInclude Include="include\SharedConcurrentQueue.h" />

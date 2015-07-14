@@ -2,6 +2,9 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <memory>
+#include <map>
+
+#include "FeatureContainer.h"
 
 class Frame {
 
@@ -9,6 +12,9 @@ class Frame {
 		cv::Mat _frame;
 		int _camera_id;
 		int _frame_id;
+
+
+		FeatureContainer theConatiner;
 
 	public:
 		Frame();
