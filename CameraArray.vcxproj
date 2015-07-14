@@ -87,9 +87,9 @@
     <ClInclude Include="ContourProcessor.h" />
     <ClInclude Include="include\CameraDevice.h" />
     <ClInclude Include="include\Frame.h" />
+    <ClInclude Include="include\Processor.h" />
     <ClInclude Include="include\SharedConcurrentQueue.h" />
     <ClInclude Include="include\Transformer.h" />
-    <ClInclude Include="Processor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
