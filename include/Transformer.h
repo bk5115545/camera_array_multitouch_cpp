@@ -45,7 +45,7 @@ class Transformer {
 				if(frame.get() == nullptr) continue;
 				job_count--;
 				std::shared_ptr<Frame> result = processor->run(frame);
-				results.push(result);
+				if(result.get() != nullptr) results.push(result);
 			}
 
 			class_threads--;
@@ -86,8 +86,9 @@ class Transformer {
 
 		std::shared_ptr<Frame> popResult() {
 			std::shared_ptr<Frame> output = nullptr;
-			results.wait_and_pop(output);
-			return output;
+			if(results.try_pop(output))
+				return output; //return result
+			return std::shared_ptr<Frame>(); //return nullptr
 		}
 
 };

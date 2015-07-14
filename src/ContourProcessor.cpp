@@ -10,12 +10,9 @@ std::shared_ptr<Frame> ContourProcessor::run(std::shared_ptr<Frame> f) {
 	cv::vector<cv::vector<cv::Point>> contours;
 	cvtColor(frame,frame,CV_BGR2HSV);
 
+	//threshold
 	cv::inRange(frame,cv::Scalar(0,48,80),cv::Scalar(20,255,255),frame);
-	//cv::inRange(frame, cv::Scalar(0, 49, 38), cv::Scalar(19, 121, 255), frame);
-	//cv::inRange(frame, cv::Scalar(cv::getTrackbarPos("H-Low", "Parameters"), cv::getTrackbarPos("S-Low", "Parameters"), cv::getTrackbarPos("V-Low", "Parameters")), 
-	//				   cv::Scalar(cv::getTrackbarPos("H-High", "Parameters"), cv::getTrackbarPos("S-High", "Parameters"), cv::getTrackbarPos("V-High", "Parameters")), frame);
-
-
+	
 	//clean it up
 	cv::dilate(frame,frame,cv::Mat(),cv::Point(-1,-1),2,1);
 	cv::GaussianBlur(frame,frame,cv::Point(5,5),14,14);
