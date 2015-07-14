@@ -5,6 +5,8 @@
 #include "CameraDevice.h"
 #include "Transformer.h"
 #include "Frame.h"
+
+#include "BlobProcessor.h"
 #include "ContourProcessor.h"
 
 //#include "vld.h"
@@ -52,24 +54,21 @@ int main(char* argsv, char argc) {
 
 	if (!dev.acquire()) return 1;
 	
-	Transformer<ContourProcessor> tr(2);
+	Transformer<BlobProcessor> tr(4);
 	cv::namedWindow("testing " + std::to_string(dev.getID()),1);
 
 	while (true) {
 		std::shared_ptr<Frame> inputFrame = dev.getFrame();
 		
-		std::cout << "c " << " " << " f " << inputFrame->getID() << "\n";
 		int res = tr.enqueue(inputFrame);
-
-		
-		
-		std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;
+				
+		//std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;
 
 		std::shared_ptr<Frame> result = tr.popResult();
 		
-		if(result != nullptr) {
+		if(result.get() != nullptr) {
 			cv::imshow("testing " + std::to_string(dev.getID()),result->getData());
-			if(cv::waitKey(27) >= 0) break;
+			if(cv::waitKey(10) >= 0) break;
 		}
 		
 	}

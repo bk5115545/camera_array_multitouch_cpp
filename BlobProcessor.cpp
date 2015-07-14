@@ -18,7 +18,7 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 	cv::Mat tmp1, tmp2, result;
 
 	//we probably need a blur here on the input frame ot reduce camera noise.
-
+	cv::GaussianBlur(frame->getData(),frame->getData(),cv::Size(3,3),7,7);
 	cv::absdiff(previous->getData(),frame->getData(),tmp1);
 	cv::absdiff(current->getData(),frame->getData(),tmp2);
 	cv::bitwise_and(tmp1,tmp2,result);
