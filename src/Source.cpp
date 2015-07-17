@@ -70,7 +70,11 @@ int main(char* argsv,char argc) {
 
 	while (rendering) {
 		for(std::shared_ptr<CameraDevice> dev : devices) {
-			std::shared_ptr<Frame> inputFrame = dev->getFrame();
+			dev->grabFrame();
+		}
+
+		for(std::shared_ptr<CameraDevice> dev : devices) {
+			std::shared_ptr<Frame> inputFrame = dev->decodeFrame();
 
 			tr.enqueue(inputFrame);
 			//std::cout << "FrameID:" << inputFrame->getID() << "\tJob Length:" << res << std::endl;

@@ -40,8 +40,8 @@ void CameraDevice::release() {
 std::shared_ptr<Frame> CameraDevice::getFrame() {
 	cv::Mat mat;
 	capture.read(mat);
-	frame_id %= 3600; //reset ID every minute
-	return std::make_shared<Frame>(Frame(mat, camera_id, frame_id++)); 
+	
+	return std::make_shared<Frame>(Frame(mat, camera_id)); 
 }
 
 /*
@@ -72,8 +72,7 @@ std::shared_ptr<Frame> CameraDevice::decodeFrame(int channel) {
 	cv::Mat mat;
 	capture.retrieve(mat, channel); // ::TODO:: Error Catching
 
-	frame_id %= 3600; //reset ID every minute
-	return std::make_shared<Frame>(Frame(mat, camera_id, frame_id++));
+	return std::make_shared<Frame>(Frame(mat, camera_id));
 }
 
 int CameraDevice::getID() {

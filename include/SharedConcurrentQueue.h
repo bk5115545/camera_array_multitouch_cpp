@@ -3,17 +3,22 @@
 #include <boost/thread/condition_variable.hpp>
 
 template<typename Data> class concurrent_queue {
-	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from Frame");
+	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from std::shared_ptr<Frame>");
 	private:
-		std::forward_list<Data> the_queue;
+		std::list<Data> the_queue;
 		boost::mutex the_mutex;
 		boost::condition_variable the_condition_variable;
+
+		int max_size = 15;
 
 	public:
 		void push(Data const& data) {
 			boost::mutex::scoped_lock lock(the_mutex);
+			if(the_queue.size() > max_size) return;
 			the_queue.push_back(data);
-			lock.unlock();
+			the_queue.sort([](const Data & d1,const Data & d2) {
+				return d1->getID() < d2->getID();
+			});
 			the_condition_variable.notify_all();
 		}
 
@@ -27,9 +32,10 @@ template<typename Data> class concurrent_queue {
 			if(the_queue.empty()) {
 				return false;
 			}
-
-			popped_value=the_queue.front();
-			the_queue.erase(the_queue.begin());
+			if(the_queue.size() > 0) {
+				popped_value=the_queue.front();
+				the_queue.erase(the_queue.begin());
+			}
 			return true;
 		}
 
