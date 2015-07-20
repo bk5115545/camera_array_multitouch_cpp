@@ -2,51 +2,66 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
+#include <boost/timer.hpp>
+
 template<typename Data> class concurrent_queue {
 	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from std::shared_ptr<Frame>");
-	private:
-		std::list<Data> the_queue;
-		boost::mutex the_mutex;
-		boost::condition_variable the_condition_variable;
 
-		int max_size = 15;
+	private:
+		std::list<const Data> queue;
+		boost::mutex queue_mutex;
+		boost::condition_variable condition;
+
+		const int max_size = 15;
+		std::atomic<int> current_size = 0; //store size seperate so we can access it without locking the queue
 
 	public:
-		void push(Data const& data) {
-			boost::mutex::scoped_lock lock(the_mutex);
-			if(the_queue.size() > max_size) return;
-			the_queue.push_back(data);
-			the_queue.sort([](const Data & d1,const Data & d2) {
-				return d1->getID() < d2->getID();
-			});
-			the_condition_variable.notify_all();
-		}
+		bool push(Data const& data) {
+			if(current_size >= max_size) return false;
 
-		bool empty() const {
-			boost::mutex::scoped_lock lock(the_mutex);
-			return the_queue.empty();
-		}
+			boost::mutex::scoped_lock lock(queue_mutex);
 
-		bool try_pop(Data& popped_value) {
-			boost::mutex::scoped_lock lock(the_mutex);
-			if(the_queue.empty()) {
-				return false;
+			//check where to insert
+			std::list<Data>::iterator index = queue.begin();
+			if(current_size > 0) {
+				while(index != queue.end() && index->get()->getID() < data->getID()) index++; //iterator search
 			}
-			if(the_queue.size() > 0) {
-				popped_value=the_queue.front();
-				the_queue.erase(the_queue.begin());
-			}
+
+			queue.insert(index,data); //insert by iterator for O(1) instead of by index at O(n)
+			current_size++;
+
+			lock.unlock(); //unlock before notify
+
+			condition.notify_one();
 			return true;
 		}
 
-		void wait_and_pop(Data& popped_value) {
-			boost::mutex::scoped_lock lock(the_mutex);
-			while(the_queue.empty()) {
-				the_condition_variable.wait(lock);
-			}
+		bool empty() const {
+			return current_size == 0;
+		}
 
-			popped_value=the_queue.front();
-			the_queue.erase(the_queue.begin());
+		bool try_pop(Data& popped_value) {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			try {
+				if(current_size > 0) {
+					popped_value=queue.front();
+					queue.erase(queue.begin());
+					current_size--;
+					return true;
+				}
+			} catch(std::exception e) {}
+			return false;
+		}
+
+		void wait_and_pop(Data& popped_value) {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			while(current_size == 0) {
+				condition.wait(lock); //unlocks and waits.  re-locks on return
+			}
+			
+			popped_value=queue.front();
+			queue.erase(queue.begin());
+			current_size--;
 		}
 
 };

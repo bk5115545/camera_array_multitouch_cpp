@@ -27,7 +27,7 @@
     <ClCompile Include="src\ContourProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BlobProcessor.cpp">
+    <ClCompile Include="src\BlobProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

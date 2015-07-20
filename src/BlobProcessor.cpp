@@ -28,6 +28,7 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 		return std::shared_ptr<Frame>(); //return nullptr
 	}
 
+	/* //commented out pending the implementation of a priority thread safe queue
 	//if the ID's are out of order reverse them
 	//this doesn't handle ID offsets of more than 1 frame
 	if(cache[frame->getCameraID()].first->getID() > cache[frame->getCameraID()].second->getID()) {
@@ -38,6 +39,8 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 			)
 		);
 	}
+	*/
+
 
 	cv::Mat tmp1, tmp2, result;
 

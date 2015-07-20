@@ -78,7 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BlobProcessor.cpp" />
+    <ClCompile Include="src\BlobProcessor.cpp" />
     <ClCompile Include="src\CameraDevice.cpp" />
     <ClCompile Include="src\ContourProcessor.cpp" />
     <ClCompile Include="src\Frame.cpp" />

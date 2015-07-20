@@ -6,7 +6,7 @@
 
 #include "FeatureContainer.h"
 
-class Frame {
+class Frame : public std::enable_shared_from_this<Frame> {
 
 	private:
 		cv::Mat _frame;

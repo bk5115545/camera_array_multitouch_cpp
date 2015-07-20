@@ -70,7 +70,10 @@ class Transformer {
 		}
 		int enqueue(std::shared_ptr<Frame> frame) {
 
-			jobs.push(frame);
+			if(!jobs.push(frame)) {
+				std::this_thread::sleep_for(std::chrono::microseconds(3));
+				return job_count/ (instance_threads > 0 ? instance_threads.operator int() : 1);
+			}
 
 			job_count++;
 
