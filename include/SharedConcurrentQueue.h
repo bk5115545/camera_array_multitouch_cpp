@@ -24,7 +24,10 @@ template<typename Data> class concurrent_queue {
 			//check where to insert
 			std::list<Data>::iterator index = queue.begin();
 			if(current_size > 0) {
-				while(index != queue.end() && index->get()->getID() < data->getID()) index++; //iterator search
+				try {
+					while(queue.size() < max_size && index != queue.end()-- && index->get()->getID() < data->getID()) index++; //iterator search
+				}
+				catch (std::exception e) {}
 			}
 
 			queue.insert(index,data); //insert by iterator for O(1) instead of by index at O(n)

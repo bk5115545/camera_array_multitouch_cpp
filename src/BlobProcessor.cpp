@@ -20,26 +20,13 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 			return std::shared_ptr<Frame>(); //return nullptr
 		}
 		
-		
+	
 	} 
 
 	if(cache[frame->getCameraID()].second.get() == nullptr) {
 		cache[frame->getCameraID()].second = frame;
 		return std::shared_ptr<Frame>(); //return nullptr
 	}
-
-	/* //commented out pending the implementation of a priority thread safe queue
-	//if the ID's are out of order reverse them
-	//this doesn't handle ID offsets of more than 1 frame
-	if(cache[frame->getCameraID()].first->getID() > cache[frame->getCameraID()].second->getID()) {
-		cache[frame->getCameraID()].swap(
-			std::pair<std::shared_ptr<Frame>, std::shared_ptr<Frame>>(
-			cache[frame->getCameraID()].second, 
-			cache[frame->getCameraID()].first
-			)
-		);
-	}
-	*/
 
 
 	cv::Mat tmp1, tmp2, result;
@@ -50,8 +37,6 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 	cv::absdiff(cache[frame->getCameraID()].first->getData(),frame->getData(),tmp1);
 	cv::absdiff(cache[frame->getCameraID()].second->getData(),frame->getData(),tmp2);
 	cv::bitwise_and(tmp1,tmp2,result);
-
-	cv::threshold(result,result,35,255,CV_THRESH_BINARY);
 
 	cache[frame->getCameraID()].first = cache[frame->getCameraID()].second;
 	cache[frame->getCameraID()].second = frame;

@@ -11,44 +11,6 @@
 
 //#include "vld.h"
 
-/*
-int useMotionEstimation() {
-	cv::VideoCapture cap(1);
-
-	if (!cap.isOpened()) {
-		return -1;
-	}
-	int* threshold_sensitivity = 0;
-	cv::namedWindow("Threshold Settings");
-	cv::createTrackbar("Sensitivity", "Threshold Settings", threshold_sensitivity, 255);
-
-	cv::Mat previousFrame, currentFrame, liveFrame, tmpFrame, diffFrame;
-	cap >> previousFrame;
-	cv::cvtColor(previousFrame, previousFrame, cv::COLOR_BGR2GRAY);
-
-	while (true) {
-		cap.read(liveFrame);
-
-		cv::cvtColor(liveFrame, currentFrame, cv::COLOR_BGR2GRAY);
-		//cv::blur(...);
-		cv::absdiff(previousFrame, currentFrame, diffFrame);
-		cv::threshold(diffFrame, tmpFrame, cv::getTrackbarPos("Sensitivity", "Threshold Settings"), 255, cv::THRESH_BINARY);
-
-		cv::imshow("Previous", previousFrame);
-		cv::imshow("Current", currentFrame);
-		cv::imshow("Difference", diffFrame);
-		cv::imshow("Threshold", tmpFrame);
-
-		previousFrame = currentFrame;
-
-		if (cv::waitKey(30) >= 0) break;
-	}
-
-	cv::destroyAllWindows();
-	return 1;
-}
-*/
-
 int main(char* argsv,char argc) {
 	bool rendering = true;
 	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
