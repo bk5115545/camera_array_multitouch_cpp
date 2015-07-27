@@ -9,10 +9,13 @@ class CameraDevice {
 	private:
 		bool acquired = false;
 		int camera_id = -1;
-		int frame_id = 0;
+		int camera_position = 0;
+
 		cv::VideoCapture capture;
 
 	public:
+		static std::vector<std::shared_ptr<CameraDevice>> devices;
+
 		CameraDevice(int camera_id);
 		~CameraDevice();
 
@@ -25,7 +28,12 @@ class CameraDevice {
 		std::shared_ptr<Frame> decodeFrame(int channel=0);
 		int getID();
 
+		std::shared_ptr<CameraDevice> getCameraDevice(int id);
+
 		bool calibrate_lens();
+
+		inline void setPosition(int value);
+		inline int getPosition();
 
 		inline double getFPS();
 		inline bool setFPS(double value);
@@ -33,6 +41,6 @@ class CameraDevice {
 		inline std::pair<double, double> getResolution();
 		inline std::pair<bool, bool> setResolution(double height, double width);
 
-		inline double getOpenCVProperty(int prop_id);
-		inline bool setOpenCVProperty(int prop_id, double value);
+		double getOpenCVProperty(int prop_id);
+		bool setOpenCVProperty(int prop_id, double value);
 };

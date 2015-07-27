@@ -1,9 +1,12 @@
+#pragma once
+
 #include "CameraDevice.h"
 //#include "vld.h"
 
+std::vector<std::shared_ptr<CameraDevice>> CameraDevice::devices = std::vector<std::shared_ptr<CameraDevice>>();
+
 CameraDevice::CameraDevice(int camera_id)
 	: camera_id(camera_id)
-	, frame_id(0)
 {
 //	this->camera_id = camera_id;
 
@@ -22,7 +25,7 @@ bool CameraDevice::acquire() {
 		acquired = true;
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -79,6 +82,10 @@ int CameraDevice::getID() {
 	return camera_id;
 }
 
+std::shared_ptr<CameraDevice> CameraDevice::getCameraDevice(int id) {
+	return devices[id];
+}
+
 /*
 	Calibrates the camera device based on Chessboard
 
@@ -119,6 +126,14 @@ bool CameraDevice::calibrate_lens() {
 	//cv::calibrateCamera();
 
 	return true;
+}
+
+inline void CameraDevice::setPosition(int value) {
+	camera_position = value;
+}
+
+inline int CameraDevice::getPosition() {
+	return camera_position;
 }
 
 /*
@@ -177,7 +192,7 @@ inline std::pair<bool, bool> CameraDevice::setResolution(double height, double w
 	OUTPUT:
 		0 if get was unsuccessful
 */
-inline double CameraDevice::getOpenCVProperty(int prop_id) {
+double CameraDevice::getOpenCVProperty(int prop_id) {
 	return capture.get(prop_id); //::TODO:: Do error catching
 }
 
@@ -188,6 +203,6 @@ inline double CameraDevice::getOpenCVProperty(int prop_id) {
 	OUTPUT:
 		false if set was unsuccessful
 */
-inline bool CameraDevice::setOpenCVProperty(int prop_id, double value) {
+bool CameraDevice::setOpenCVProperty(int prop_id, double value) {
 	return capture.set(prop_id, value);
 }
