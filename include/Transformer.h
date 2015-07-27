@@ -25,6 +25,7 @@ class Transformer {
 		bool running = true;
 		
 		std::vector<std::thread*> threads;
+
 	public:
 		Transformer(int thread_limit) {
 			max_threads = thread_limit;
