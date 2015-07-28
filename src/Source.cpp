@@ -26,7 +26,7 @@ int main(char* argsv,char argc) {
 		}
 	}
 
-	Transformer<CalibrationProcessor> tr(4);
+	Transformer<CalibrationProcessor> tr(2);
 	//Transformer<CalibrationProcessor> cp(
 
 	for (std::shared_ptr<CameraDevice> dev : CameraDevice::devices) {
