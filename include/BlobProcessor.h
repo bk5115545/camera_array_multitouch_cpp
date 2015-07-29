@@ -9,13 +9,9 @@
 class BlobProcessor: Processor {
 private:
 	
-	
-	bool hasElement(int index) {
-		try {
-			cache.at(index);
-			return true;
-		}
-		catch(std::out_of_range e) { return false; }
+	template<typename T, typename K>
+	bool hasElement(std::map<T,K> &map, int index) {
+		return map.find(index) != map.end();
 	}
 
 

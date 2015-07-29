@@ -8,7 +8,7 @@ BlobProcessor::BlobProcessor() {
 
 std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 	
-	if(!hasElement(frame->getCameraID())) {
+	if(!hasElement(cache, frame->getCameraID())) {
 		__previous_current__ pair;
 		try {
 			pair = cache.at(frame->getCameraID());
@@ -58,8 +58,6 @@ std::shared_ptr<Frame> BlobProcessor::findBlob(cv::Mat diff, std::shared_ptr<Fra
 	}
 
 	//cv::Mat target = cv::Mat::zeros(diff.size(),diff.type());
-
-	std::cout << color->getCameraID() << std::endl;
 
 	
 	return std::make_shared<Frame>(diff, color->getCameraID(), color->getID());
