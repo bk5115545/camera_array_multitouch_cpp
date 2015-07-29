@@ -29,7 +29,7 @@ int main(char* argsv,char argc) {
 	for(std::shared_ptr<CameraDevice> dev : devices) {
 		cv::namedWindow("testing " + std::to_string(dev->getID()),1);
 	}
-
+	
 	while (rendering) {
 		for(std::shared_ptr<CameraDevice> dev : devices) {
 			dev->grabFrame();
@@ -44,8 +44,8 @@ int main(char* argsv,char argc) {
 			std::shared_ptr<Frame> result = tr.popResult();
 
 			if(result.get() != nullptr) {
-				cv::imshow("testing " + std::to_string(dev->getID()),result->getData());
-				if(cv::waitKey(10) >= 0) rendering = false;
+				cv::imshow("testing " + std::to_string(result->getCameraID()),result->getData());
+				if(cv::waitKey(45) >= 0) rendering = false;
 			}
 		}
 	}

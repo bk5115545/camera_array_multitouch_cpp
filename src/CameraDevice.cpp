@@ -20,6 +20,7 @@ bool CameraDevice::acquire() {
 	capture = cv::VideoCapture(camera_id);
 	if (capture.isOpened()) {
 		acquired = true;
+		//capture.set(CV_CAP_PROP_SETTINGS,1); //open driver advanced settings panel
 		return true;
 	}
 	
