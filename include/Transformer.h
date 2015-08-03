@@ -69,6 +69,7 @@ class Transformer {
 		int totalTransformerThreads(){
 			return class_threads;
 		}
+
 		int enqueue(std::shared_ptr<Frame> frame) {
 
 			if(!jobs.push(frame)) {

@@ -12,7 +12,7 @@
 class CalibrationProcessor : Processor {
 
 	std::deque<CameraDevice> camera_locations;
-	cv::SiftFeatureDetector sift_detector;
+	std::shared_ptr<cv::FeatureDetector> sift_detector;
 
 private:
 	void calibrateLens(std::shared_ptr<Frame> frame);

@@ -1,35 +1,20 @@
 
 #include <iostream>
+#include <chrono>
 
 #include "CalibrationProcessor.h"
 
 std::map<int, CalibrationProcessor::__previous_current__> CalibrationProcessor::cache = std::map<int, __previous_current__>();
 
 std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> frame) {
-
-	if (!hasElement(frame->getCameraID())) {
-		__previous_current__ pair;
-		try {
-			pair = cache.at(frame->getCameraID());
-		}
-		catch (std::out_of_range e) {
-			pair = std::pair<std::shared_ptr<Frame>, std::shared_ptr<Frame>>();
-			pair.first = frame;
-			cache[frame->getCameraID()] = pair;
-
-			return std::shared_ptr<Frame>(); //return nullptr
-		}
-
-
-	}
-
-	if (cache[frame->getCameraID()].second.get() == nullptr) {
-		cache[frame->getCameraID()].second = frame;
-		return std::shared_ptr<Frame>(); //return nullptr
-	}
-
-	std::cout << "Camera ID: " << frame->getCameraID() << "\n";
-	return calibratePosition(frame);
+	sift_detector = std::make_shared<cv::SiftFeatureDetector>();
+	
+	auto t1 = std::chrono::high_resolution_clock::now();	
+	cvtColor(frame->getData(), frame->getData(), CV_BGR2RGB);
+	frame = calibratePosition(frame);
+	auto t2 = std::chrono::high_resolution_clock::now();
+	
+	return frame; //calibratePosition(frame);
 }
 
 /*
@@ -46,12 +31,17 @@ std::shared_ptr<Frame> CalibrationProcessor::calibratePosition(std::shared_ptr<F
 	std::vector<cv::KeyPoint> keypoints;
 	cv::Mat output;
 
-	sift_detector.detect(frame->getData(), keypoints);
-	cv::drawKeypoints(frame->getData(), keypoints, output);
+	auto t1 = std::chrono::high_resolution_clock::now();
+	sift_detector->detect(frame->getData(), keypoints);
+	auto t2 = std::chrono::high_resolution_clock::now();
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "\n";
 
-	std::cout << frame->getCameraID() << "\n";
 
-	return std::make_shared<Frame>(output, frame->getCameraID(), frame->getID());
+	cv::drawKeypoints(frame->getData(), keypoints, frame->getData());
+
+	//std::cout << frame->getCameraID() << "\n";
+
+	return frame;
 }
 
 void CalibrationProcessor::calibrateCameraValue(int camera_id, int opencv_param_id, double opencv_param_value) {
