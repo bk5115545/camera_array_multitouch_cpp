@@ -9,12 +9,21 @@
 #include "CameraDevice.h"
 #include "Processor.h"
 
+struct CalibrationParameters {
+	int camera_id;
+
+	bool found_features;
+
+};
+
 class CalibrationProcessor : Processor {
 	std::shared_ptr<Frame> frame;
 	std::deque<CameraDevice> camera_locations;
 	
 	std::shared_ptr<cv::FeatureDetector> sift_detector;
 	std::vector<cv::KeyPoint> historic_features;
+
+	std::vector<CalibrationParameters> cameras_tested;
 
 private:
 	// Calibration Functions
@@ -23,7 +32,10 @@ private:
 
 	// Helpers
 	std::vector<cv::KeyPoint> getKeypoints();
+	
 	void filterKeypoints(std::vector<cv::KeyPoint> kp);
+	bool filterLocations(cv::Point pt);
+	bool foundFeature(cv::Point pt);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
