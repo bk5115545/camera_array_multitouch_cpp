@@ -62,16 +62,23 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	auto start = std::chrono::system_clock::now();
 	cv::Mat temp = frame->getData();
 	cv::Mat out = temp;
+	
+	cv::medianBlur(out, out, 1);
 
 	cvtColor(temp, temp, CV_BGR2GRAY);
-	cv::adaptiveThreshold(temp, out, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 3, 5);
+
+	cv::adaptiveThreshold(temp, out, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 7, 5);
+	//cv::morphologyEx(out, out, cv::MORPH_OPEN, cv::Mat(), cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::morphologyDefaultBorderValue());
+
+	cv::Mat fore;
+	bg.operator () (out, fore);
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
 	std::cout << duration << "\n";
 
-	return std::make_shared<Frame>(out, frame->getCameraID());
+	return std::make_shared<Frame>(fore, frame->getCameraID(), frame->getID());
 }
 
 /*
