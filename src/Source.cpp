@@ -26,7 +26,7 @@ int main(char* argsv,char argc) {
 		}
 	}
 
-	Transformer<CalibrationProcessor> tr(4);
+	Transformer<CalibrationProcessor> tr(2);
 	//Transformer<CalibrationProcessor> cp(
 
 	for (std::shared_ptr<CameraDevice> dev : CameraDevice::devices) {
@@ -48,7 +48,7 @@ int main(char* argsv,char argc) {
 
 			if(result.get() != nullptr) {
 				cv::imshow("testing " + std::to_string(dev->getID()),result->getData());
-				if(cv::waitKey(10) >= 0) 
+				if(cv::waitKey(1) >= 0) 
 					rendering = false;
 			}
 		}

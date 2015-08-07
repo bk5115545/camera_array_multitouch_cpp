@@ -4,6 +4,7 @@
 #include <atomic>
 #include <queue>
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/nonfree/features2d.hpp>
 
 #include "CameraDevice.h"
@@ -13,7 +14,6 @@ struct CalibrationParameters {
 	int camera_id;
 
 	bool found_features;
-
 };
 
 class CalibrationProcessor : Processor {
@@ -25,6 +25,8 @@ class CalibrationProcessor : Processor {
 
 	std::vector<CalibrationParameters> cameras_tested;
 
+	cv::BackgroundSubtractorMOG bg = cv::BackgroundSubtractorMOG();
+
 private:
 	// Calibration Functions
 	void calibrateLens();
@@ -35,7 +37,7 @@ private:
 	
 	void filterKeypoints(std::vector<cv::KeyPoint> kp);
 	bool filterLocations(cv::Point pt);
-	bool foundFeature(cv::Point pt);
+	//bool foundFeature(cv::Point pt);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
