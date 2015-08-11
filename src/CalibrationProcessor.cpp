@@ -78,7 +78,18 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
 	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
 
-	
+	//bg.operator() (temp, temp);
+
+
+	cv::vector<cv::vector<cv::Point>> edges;
+	cv::vector<cv::Vec4i> hierarchy;
+	cv::findContours(temp, edges, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+
+	//std::cout << edges.size() << "\n";
+
+	if (edges.size() > 1000) {
+		std::cout << "HELLO" << "\n";
+	}
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
