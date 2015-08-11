@@ -70,8 +70,6 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	if (previous_frame.size() == cv::Size(0,0)) {
 		previous_frame = frame->getData();
 		cvtColor(previous_frame, previous_frame, CV_BGR2GRAY);
-
-		std::cout << "Hello" << "\n";
 	}
 
 	cv::absdiff(previous_frame, temp, temp);
@@ -79,7 +77,6 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
 
 	//bg.operator() (temp, temp);
-
 
 	cv::vector<cv::vector<cv::Point>> edges;
 	cv::vector<cv::Vec4i> hierarchy;
