@@ -26,6 +26,7 @@ class CalibrationProcessor : Processor {
 	std::vector<CalibrationParameters> cameras_tested;
 
 	cv::BackgroundSubtractorMOG bg = cv::BackgroundSubtractorMOG();
+	cv::Mat previous_frame;
 
 private:
 	// Calibration Functions

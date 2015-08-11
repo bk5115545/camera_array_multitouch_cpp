@@ -59,26 +59,33 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	*/
 
 	// Adaptive Thresholding 4ms
+
 	auto start = std::chrono::system_clock::now();
 	cv::Mat temp = frame->getData();
-	cv::Mat out = temp;
-	
-	cv::medianBlur(out, out, 1);
+
+	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
 
 	cvtColor(temp, temp, CV_BGR2GRAY);
 
-	cv::adaptiveThreshold(temp, out, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 7, 5);
-	//cv::morphologyEx(out, out, cv::MORPH_OPEN, cv::Mat(), cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::morphologyDefaultBorderValue());
+	if (previous_frame.size() == cv::Size(0,0)) {
+		previous_frame = frame->getData();
+		cvtColor(previous_frame, previous_frame, CV_BGR2GRAY);
 
-	cv::Mat fore;
-	bg.operator () (out, fore);
+		std::cout << "Hello" << "\n";
+	}
+
+	cv::absdiff(previous_frame, temp, temp);
+	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
+	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
+
+	
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
-	std::cout << duration << "\n";
+	//std::cout << duration << "\n";
 
-	return std::make_shared<Frame>(fore, frame->getCameraID(), frame->getID());
+	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
 }
 
 /*

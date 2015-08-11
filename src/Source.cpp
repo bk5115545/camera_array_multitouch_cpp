@@ -27,7 +27,6 @@ int main(char* argsv,char argc) {
 	}
 
 	Transformer<CalibrationProcessor> tr(1);
-	//Transformer<CalibrationProcessor> cp(
 
 	for (std::shared_ptr<CameraDevice> dev : CameraDevice::devices) {
 		cv::namedWindow("testing " + std::to_string(dev->getID()), 1);
