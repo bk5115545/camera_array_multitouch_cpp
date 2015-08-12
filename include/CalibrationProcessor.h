@@ -19,26 +19,25 @@ struct CalibrationParameters {
 class CalibrationProcessor : Processor {
 	std::shared_ptr<Frame> frame;
 	std::deque<CameraDevice> camera_locations;
-	
-	std::shared_ptr<cv::FeatureDetector> sift_detector;
-	std::vector<cv::KeyPoint> historic_features;
 
 	std::vector<CalibrationParameters> cameras_tested;
 
 	cv::BackgroundSubtractorMOG bg = cv::BackgroundSubtractorMOG();
-	cv::Mat previous_frame;
+	
+	cv::Mat average_frame;
+	cv::Mat first_frame;
+
+	unsigned long long number_of_frames = 0;
+
+	unsigned long long first_frame_id = 9999999999999;
 
 private:
 	// Calibration Functions
 	void calibrateLens();
-	void calibratePosition();
+	cv::Mat calibratePosition();
 
 	// Helpers
-	std::vector<cv::KeyPoint> getKeypoints();
-	
-	void filterKeypoints(std::vector<cv::KeyPoint> kp);
-	bool filterLocations(cv::Point pt);
-	//bool foundFeature(cv::Point pt);
+	void updateAverageFrame(cv::Mat current_frame);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
