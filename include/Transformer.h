@@ -97,4 +97,4 @@ class Transformer {
 };
 
 template <class Proc>
-std::atomic<int> Transformer<Proc>::class_threads = 0;
+std::atomic<int> Transformer<Proc>::class_threads(0);

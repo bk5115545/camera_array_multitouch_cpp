@@ -1,4 +1,5 @@
-﻿#include <forward_list>
+#pragma once
+#include <forward_list>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
@@ -8,12 +9,16 @@ template<typename Data> class concurrent_queue {
 	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from std::shared_ptr<Frame>");
 
 	private:
-		std::list<const Data> queue;
+		#ifdef _WIN32
+			std::list<const Data> queue; //enforce const-correctness
+		#else
+			std::list<Data> queue;       //but g++ does something special i guess
+		#endif
 		boost::mutex queue_mutex;
 		boost::condition_variable condition;
 
 		const int max_size = 15;
-		std::atomic<int> current_size = 0; //store size seperate so we can access it without locking the queue
+		std::atomic<int> current_size{0}; //store size seperate so we can access it without locking the queue
 
 	public:
 		bool push(Data const& data) {
@@ -22,7 +27,7 @@ template<typename Data> class concurrent_queue {
 			boost::mutex::scoped_lock lock(queue_mutex);
 
 			//check where to insert
-			std::list<Data>::iterator index = queue.begin();
+			auto index = queue.begin();
 			if(current_size > 0) {
 				try {
 					while(queue.size() < max_size && index != queue.end()-- && index->get()->getID() < data->getID()) index++; //iterator search
@@ -61,7 +66,7 @@ template<typename Data> class concurrent_queue {
 			while(current_size == 0) {
 				condition.wait(lock); //unlocks and waits.  re-locks on return
 			}
-			
+
 			popped_value=queue.front();
 			queue.erase(queue.begin());
 			current_size--;

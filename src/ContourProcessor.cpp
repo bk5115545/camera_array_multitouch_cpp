@@ -1,5 +1,5 @@
 #include "ContourProcessor.h"
-#include <opencv2\opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include "Frame.h"
 
 ContourProcessor::ContourProcessor() {}
@@ -12,7 +12,7 @@ std::shared_ptr<Frame> ContourProcessor::run(std::shared_ptr<Frame> f) {
 
 	//threshold
 	cv::inRange(frame,cv::Scalar(0,48,80),cv::Scalar(20,255,255),frame);
-	
+
 	//clean it up
 	cv::dilate(frame,frame,cv::Mat(),cv::Point(-1,-1),2,1);
 	cv::GaussianBlur(frame,frame,cv::Point(5,5),14,14);
