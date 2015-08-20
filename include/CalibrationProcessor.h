@@ -23,12 +23,8 @@ class CalibrationProcessor : Processor {
 	std::vector<CalibrationParameters> cameras_tested;
 
 	cv::BackgroundSubtractorMOG bg = cv::BackgroundSubtractorMOG();
-	
-	cv::Mat average_frame;
+
 	cv::Mat first_frame;
-
-	unsigned long long number_of_frames = 0;
-
 	unsigned long long first_frame_id = 9999999999999;
 
 private:

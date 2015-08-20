@@ -39,28 +39,18 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	/*
 		Initial frame
 	*/
-	if (frame->getID() < first_frame_id) {
+	if (frame->getID() < first_frame_id | frame->getID() % 3 < 1.0) {
 		first_frame_id = frame->getID();
-
 		first_frame = temp.clone();
-		average_frame = cv::Mat::zeros(frame->getData().size(), CV_8U);
 	}
-
-	/*
-		Compute Running Frame Average
-	*/
-
-	//updateAverageFrame(temp);
-	//average_frame = first_frame.clone();
 
 	/*
 		Background Subtraction via Running Average and Thresholding
 	*/
 	cv::absdiff(first_frame, temp, temp);
+	cv::erode(temp, temp, cv::Mat(), cv::Point(0, 0), 2, 1);
 	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
 	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
-
-	//bg.operator() (temp, temp);
 
 	/*
 		Simple Contour Detection
@@ -69,18 +59,14 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	cv::vector<cv::Vec4i> hierarchy;
 	cv::findContours(temp, edges, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
-	//std::cout << edges.size() << "\n";
-
-	if (edges.size() > 1000) {
-		std::cout << "HELLO" << "\n";
-	}
+	std::cout << edges.size() << "\n";
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
+	//std::cout << duration << "\n";
 
 	return temp;
-	//std::cout << duration << "\n";
 }
 
 /*
@@ -89,9 +75,3 @@ cv::Mat CalibrationProcessor::calibratePosition() {
  *
  */
 
-void CalibrationProcessor::updateAverageFrame(cv::Mat current_frame) {
-	average_frame += current_frame;
-	number_of_frames += 1;
-	
-	average_frame *= (1 / number_of_frames);
-}
