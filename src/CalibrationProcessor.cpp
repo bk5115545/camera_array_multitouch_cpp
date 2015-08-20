@@ -39,7 +39,7 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	/*
 		Initial frame
 	*/
-	if (frame->getID() < first_frame_id | frame->getID() % 3 < 1.0) {
+	if (frame->getID() < first_frame_id ) {
 		first_frame_id = frame->getID();
 		first_frame = temp.clone();
 	}
@@ -59,12 +59,26 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	cv::vector<cv::Vec4i> hierarchy;
 	cv::findContours(temp, edges, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
-	std::cout << edges.size() << "\n";
+	if (edges.size() > 0) {
+		updateAverageLocation(edges);
+		//std::cout << "X: " << average_point.x << "Y: " << average_point.y << "\n";
+
+		determineDirection();
+	}
+
+	else if (edges.size() == 0 && number_right > 0) {
+		std::cout << number_right << " " << number_left << " " << number_right + number_left << "\n";
+
+		number_left = 0;
+		number_right = 0;
+	}
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
-	//std::cout << duration << "\n";
+	std::cout << duration << "\n";
+	num_frames++;
+	previous_point = average_point;
 
 	return temp;
 }
@@ -74,4 +88,41 @@ cv::Mat CalibrationProcessor::calibratePosition() {
  *	Helper Functions
  *
  */
+
+void CalibrationProcessor::updateAverageLocation(cv::vector<cv::vector<cv::Point>> edges) {
+	for each (cv::vector<cv::Point> temp_vec in edges) {
+		for each (cv::Point temp_point in temp_vec) {
+			average_point.x += temp_point.x;
+			average_point.y += temp_point.y;
+		}
+	}
+
+	average_point.x *= (1.0 / num_frames);
+	average_point.y *= (1.0 / num_frames);
+}
+
+void CalibrationProcessor::determineDirection() {
+	auto delta_x = average_point.x - previous_point.x;
+	auto delta_y = average_point.y - previous_point.y;
+
+	if (delta_x < 0) {
+		std::cout << "Moving Left" << "\n";
+		number_left++;
+	}
+
+	else if (delta_x > 0) {
+		std::cout << "Moving Right" << "\n";
+		number_right++;
+	}
+
+	/*
+	if (delta_y < 0) {
+		std::cout << "Moving Down" << "\n";
+	}
+
+	else if (delta_y > 0) {
+		std::cout << "Moving Up" << "\n";
+	}
+	*/
+}
 

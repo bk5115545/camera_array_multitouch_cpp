@@ -22,10 +22,15 @@ class CalibrationProcessor : Processor {
 
 	std::vector<CalibrationParameters> cameras_tested;
 
-	cv::BackgroundSubtractorMOG bg = cv::BackgroundSubtractorMOG();
-
 	cv::Mat first_frame;
 	unsigned long long first_frame_id = 9999999999999;
+	unsigned long long num_frames = 1;
+
+	cv::Point average_point;
+	cv::Point previous_point;
+	
+	int number_right = 0;
+	int number_left = 0;
 
 private:
 	// Calibration Functions
@@ -33,7 +38,8 @@ private:
 	cv::Mat calibratePosition();
 
 	// Helpers
-	void updateAverageFrame(cv::Mat current_frame);
+	void updateAverageLocation(cv::vector<cv::vector<cv::Point>> edges);
+	void determineDirection();
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
