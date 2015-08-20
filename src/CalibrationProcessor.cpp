@@ -52,33 +52,19 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
 	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
 
-	/*
-		Simple Contour Detection
-	*/
-	cv::vector<cv::vector<cv::Point>> edges;
-	cv::vector<cv::Vec4i> hierarchy;
-	cv::findContours(temp, edges, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+	cv::Point average = updateAverageLocation(temp);
+	cvtColor(temp, temp, CV_GRAY2RGB);
+	cv::circle(temp, average, 5, cv::Scalar(255, 128, 128), 5.0);
 
-	if (edges.size() > 0) {
-		updateAverageLocation(edges);
-		//std::cout << "X: " << average_point.x << "Y: " << average_point.y << "\n";
+	//std::cout << "X: " << average.x << " Y: " << average.y << "\n";
 
-		determineDirection();
-	}
-
-	else if (edges.size() == 0 && number_right > 0) {
-		std::cout << number_right << " " << number_left << " " << number_right + number_left << "\n";
-
-		number_left = 0;
-		number_right = 0;
-	}
+	//determineDirection();
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
 	std::cout << duration << "\n";
-	num_frames++;
-	previous_point = average_point;
+	previous_point = average;
 
 	return temp;
 }
@@ -89,18 +75,31 @@ cv::Mat CalibrationProcessor::calibratePosition() {
  *
  */
 
-void CalibrationProcessor::updateAverageLocation(cv::vector<cv::vector<cv::Point>> edges) {
-	for each (cv::vector<cv::Point> temp_vec in edges) {
-		for each (cv::Point temp_point in temp_vec) {
-			average_point.x += temp_point.x;
-			average_point.y += temp_point.y;
-		}
-	}
+cv::Point CalibrationProcessor::updateAverageLocation(cv::Mat temp) {
+	cv::Point average_point;
+	int area = temp.rows * temp.cols;
+	
+	int num_white = 1;
 
-	average_point.x *= (1.0 / num_frames);
-	average_point.y *= (1.0 / num_frames);
+	for (int y = 0; y < temp.rows; y++) {
+		for (int x = 0; x < temp.cols; x++) {
+			uchar color = temp.at<uchar>(y, x);
+
+			if (color == 255) {
+				average_point.x += x;
+				average_point.y += y;
+
+				num_white++;
+			}
+		}
+	}	
+	
+	average_point.x /= num_white;
+	average_point.y /= num_white;
+	return average_point;
 }
 
+/*
 void CalibrationProcessor::determineDirection() {
 	auto delta_x = average_point.x - previous_point.x;
 	auto delta_y = average_point.y - previous_point.y;
@@ -123,6 +122,7 @@ void CalibrationProcessor::determineDirection() {
 	else if (delta_y > 0) {
 		std::cout << "Moving Up" << "\n";
 	}
-	*/
+	
 }
 
+*/

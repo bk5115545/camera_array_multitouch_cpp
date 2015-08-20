@@ -24,9 +24,7 @@ class CalibrationProcessor : Processor {
 
 	cv::Mat first_frame;
 	unsigned long long first_frame_id = 9999999999999;
-	unsigned long long num_frames = 1;
-
-	cv::Point average_point;
+	
 	cv::Point previous_point;
 	
 	int number_right = 0;
@@ -38,7 +36,7 @@ private:
 	cv::Mat calibratePosition();
 
 	// Helpers
-	void updateAverageLocation(cv::vector<cv::vector<cv::Point>> edges);
+	cv::Point updateAverageLocation(cv::Mat image);
 	void determineDirection();
 
 public:
