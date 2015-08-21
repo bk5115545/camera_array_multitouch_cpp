@@ -47,6 +47,7 @@ private:
 	// Helpers
 	cv::Point updateAverageLocation(cv::Mat image);
 	void determineDirection(Movement & movement);
+	void subtractBackground(CalibrationParameters & parameters, cv::Mat & currentframe);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);

@@ -44,29 +44,14 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 		camera_parameters.background = temp.clone();
 	}
 
-	/*
-		Background Subtraction via Running Average and Thresholding
-	*/
-	cv::absdiff(camera_parameters.background, temp, temp);
-	cv::erode(temp, temp, cv::Mat(), cv::Point(0, 0), 2, 1);
-	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
-	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
-
-	
+	subtractBackground(camera_parameters, temp);
 	camera_movement.average_point = updateAverageLocation(temp);
-	cvtColor(temp, temp, CV_GRAY2RGB);
-	cv::circle(temp, camera_movement.average_point, 5, cv::Scalar(255, 128, 128), 5.0);
-
-	//std::cout << "X: " << average.x << " Y: " << average.y << "\n";
-
 	determineDirection(camera_movement);
-	std::cout << camera_movement.right << camera_movement.left << "\n";
-	std::cout << camera_movement.up << camera_movement.down << "\n\n";
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
-	//std::cout << duration << "\n";
+	std::cout << duration << "\n";
 	camera_movement.previous_point = camera_movement.average_point;
 
 	return temp;
@@ -84,7 +69,6 @@ cv::Point CalibrationProcessor::updateAverageLocation(cv::Mat temp) {
 
 	if (num > 0) {
 		std::vector<cv::Point> white_locs;
-
 		cv::findNonZero(temp, white_locs);
 
 		for each (cv::Point white in white_locs) {
@@ -102,7 +86,6 @@ cv::Point CalibrationProcessor::updateAverageLocation(cv::Mat temp) {
 		return cv::Point ();
 	}
 }
-
 
 void CalibrationProcessor::determineDirection(Movement & movement) {
 	auto delta_x = movement.average_point.x - movement.previous_point.x;
@@ -129,4 +112,14 @@ void CalibrationProcessor::determineDirection(Movement & movement) {
 		movement.up = true;
 		movement.down = false;
 	}	
+}
+
+void CalibrationProcessor::subtractBackground(CalibrationParameters & parameters, cv::Mat & currentframe) {
+	/*
+		Background Subtraction via an init_frame and Thresholding
+	*/
+	cv::absdiff(parameters.background, currentframe, currentframe);
+	cv::erode(currentframe, currentframe, cv::Mat(), cv::Point(0, 0), 2, 1);
+	cv::dilate(currentframe, currentframe, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
+	cv::threshold(currentframe, currentframe, 25, 255, CV_THRESH_BINARY);
 }
