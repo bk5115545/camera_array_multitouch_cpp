@@ -37,7 +37,6 @@ struct PositionCalibration {
 struct LensCalibration {
 	cv::Mat feature_image;
 
-	cv::SURF surf;
 	std::vector<cv::KeyPoint> keypoints;
 };
 
@@ -49,6 +48,7 @@ class CalibrationProcessor : Processor {
 	CalibrationParameters camera_parameters;
 	PositionCalibration camera_movement;
 	LensCalibration camera_lens;
+
 private:
 	// Calibration Functions
 	void calibrateLens(cv::Mat & current_frame);

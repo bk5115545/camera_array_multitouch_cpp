@@ -12,11 +12,8 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
 	cvtColor(temp, temp, CV_BGR2GRAY);
 
-	calibrateLens(temp);
-
-	/*cvtColor(frame->getData(), frame->getData(), CV_BGR2GRAY);
-
-	calibratePosition(frame->getData()); */
+	//calibrateLens(temp);
+	calibratePosition(temp); 
 
 	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
 }
@@ -50,7 +47,13 @@ void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
 	subtractBackground(camera_parameters, current_frame);
 	updateCenterOfMass(camera_movement, current_frame);
 	determineDirection(camera_movement);
+
 	//updateAverageLocation(camera_movement);
+	//cvCvtColor(current_frame, current_frame, CV_GRAY2RGB);
+	
+	cvtColor(current_frame, current_frame, CV_GRAY2RGB);
+	cv::circle(current_frame, camera_movement.previous_point, 5, cv::Scalar(128, 128, 255), 5.0);
+	cv::circle(current_frame, camera_movement.center_of_mass, 5, cv::Scalar(255, 128, 128), 5.0);
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
@@ -89,6 +92,10 @@ void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv
 		movement.center_of_mass.x /= num;
 		movement.center_of_mass.y /= num;
 	}
+
+	else {
+		movement.loc_history.clear();
+	}
 }
 
 /*
@@ -104,18 +111,20 @@ void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv
 		Not correctly implemented yet... I think
 */
 void CalibrationProcessor::updateAverageLocation(PositionCalibration & movement) {
-	int sum_x = 0; 
-	int sum_y = 0;
+	
+	if (movement.loc_history.size() > 0) {
+		int sum = 0;
 
-	for each (cv::Point location in movement.loc_history) {
-		sum_x += location.x;
-		sum_y += location.y;
+		for (auto wall : movement.loc_history) {
+			sum += wall;
+		}
+
+		int average = int(floor(sum / movement.loc_history.size()));
+		
+		movement.last_known_position = average;
+
+		std::cout << average << " " << movement.loc_history.size() << " " << sum << "\n";
 	}
-
-	int average_x = floor(sum_x / movement.loc_history.size());
-	int average_y = floor(sum_y / movement.loc_history.size());
-
-	std::cout << average_x << " " << average_y << "\n";
 }
 
 /*
@@ -135,22 +144,30 @@ void CalibrationProcessor::determineDirection(PositionCalibration & movement) {
 	if (delta_x < 0) {
 		movement.left = true;
 		movement.right = false;
+
+		movement.loc_history.push_back(1);
 	}
 
 	else if (delta_x > 0) {
 		movement.right = true;
 		movement.left = false;
+
+		movement.loc_history.push_back(0);
 	}
 
 	// Up - Down
 	if (delta_y < 0) {
 		movement.down = true;
 		movement.up = false;
+
+		movement.loc_history.push_back(3);
 	}
 
 	else if (delta_y > 0) {
 		movement.up = true;
 		movement.down = false;
+
+		movement.loc_history.push_back(2);
 	}
 }
 
@@ -174,4 +191,8 @@ void CalibrationProcessor::subtractBackground(CalibrationParameters & parameters
 	cv::erode(current_frame, current_frame, cv::Mat(), cv::Point(0, 0), 2, 1);
 	cv::dilate(current_frame, current_frame, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
 	cv::threshold(current_frame, current_frame, 25, 255, CV_THRESH_BINARY);
+}
+
+void CalibrationProcessor::extractFeatures(LensCalibration & lens, CalibrationParameters & parameters) {
+
 }
