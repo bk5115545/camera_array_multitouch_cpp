@@ -35,7 +35,10 @@ struct PositionCalibration {
 };
 
 struct LensCalibration {
+	cv::Mat feature_image;
 
+	cv::SURF surf;
+	std::vector<cv::KeyPoint> keypoints;
 };
 
 class CalibrationProcessor : Processor {
@@ -45,17 +48,22 @@ class CalibrationProcessor : Processor {
 
 	CalibrationParameters camera_parameters;
 	PositionCalibration camera_movement;
-
+	LensCalibration camera_lens;
 private:
 	// Calibration Functions
 	void calibrateLens(cv::Mat & current_frame);
 	void calibratePosition(cv::Mat & current_frame);
 
 	// Helpers
+
+	// Position Calibration
 	void updateCenterOfMass(PositionCalibration & movement, cv::Mat & current_frame);
 	void updateAverageLocation(PositionCalibration & movement);
 	void determineDirection(PositionCalibration & movement);
 	void subtractBackground(CalibrationParameters & parameters, cv::Mat & current_frame);
+
+	// Lens Calibration
+	void extractFeatures(LensCalibration & lens, CalibrationParameters & parameters);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);

@@ -8,15 +8,17 @@
 std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	frame = f;
 
-	cv::GaussianBlur(frame->getData(), frame->getData(), cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
+	cv::Mat temp = frame->getData();
+	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
+	cvtColor(temp, temp, CV_BGR2GRAY);
 
-	calibrateLens(frame->getData());
+	calibrateLens(temp);
 
 	/*cvtColor(frame->getData(), frame->getData(), CV_BGR2GRAY);
 
 	calibratePosition(frame->getData()); */
 
-	return std::make_shared<Frame>(frame->getData(), frame->getCameraID(), frame->getID());
+	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
 }
 
 /*
@@ -24,15 +26,13 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 */
 void CalibrationProcessor::calibrateLens(cv::Mat & current_frame) {
 	auto start = std::chrono::system_clock::now();
-	std::shared_ptr<CameraDevice> camera = CameraDevice::devices[frame->getCameraID()];
+
+	// Surf ~500 ms
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
 
 	std::cout << duration << "\n";
-
-//	std::cout << camera->getOpenCVProperty(CV_CAP_PROP_CONTRAST) << "\n";
-//	camera->setOpenCVProperty(CV_CAP_PROP_CONTRAST, 30);
 }
 
 /*
@@ -65,6 +65,15 @@ void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
  *
  */
 
+
+/*
+	updateCenterOfMass estimates the center of an object by detecting the average location
+	of all non-zero pixels in a binary mask.
+
+	INPUT
+		movement	- Used to set the center of mass variable
+		temp		- Binary Mask which is the current frame
+*/
 void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv::Mat & temp) {
 	int num = cv::countNonZero(temp);
 
@@ -82,6 +91,18 @@ void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv
 	}
 }
 
+/*
+	updateAverageLocation estimates the wall the center of mass is closest too. This is
+	useful for knowing where the center of mass is traveling between cameras. 
+	updateAverageLocation will average the loc_history and then will know what wall it is 
+	closest to
+
+	INPUT
+		movement - Used for the loc_history and will set the location
+
+	WARNING
+		Not correctly implemented yet... I think
+*/
 void CalibrationProcessor::updateAverageLocation(PositionCalibration & movement) {
 	int sum_x = 0; 
 	int sum_y = 0;
@@ -97,6 +118,15 @@ void CalibrationProcessor::updateAverageLocation(PositionCalibration & movement)
 	std::cout << average_x << " " << average_y << "\n";
 }
 
+/*
+	determineDirection will determine the direction the center of mass is moving inside
+	a cameras view. This is useful for understanding internal movements. determineDirection
+	does this by calculating the delta between the current position and previous position
+	and comparing it against 0
+
+	INPUT
+		movement - will use center_of_mass and previous_points. will set left, right, up, down
+*/
 void CalibrationProcessor::determineDirection(PositionCalibration & movement) {
 	auto delta_x = movement.center_of_mass.x - movement.previous_point.x;
 	auto delta_y = movement.center_of_mass.y - movement.previous_point.y;
@@ -124,6 +154,18 @@ void CalibrationProcessor::determineDirection(PositionCalibration & movement) {
 	}
 }
 
+/*
+	subtractBackground will modify current_frame to be a foreground mask. It does this by 
+	using the first frame as the background and diffing it against the current frame. This 
+	method is much faster and more accurate than the history based opencv implementation.
+
+	INPUT
+		parameters - Used to get the background
+		current_frame - Will become foreground mask
+
+	WARNING
+		This implementation will change because it is based on the first frame.
+*/
 void CalibrationProcessor::subtractBackground(CalibrationParameters & parameters, cv::Mat & current_frame) {
 	/*
 		Background Subtraction via an init_frame and Thresholding
