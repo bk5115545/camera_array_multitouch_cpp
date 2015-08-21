@@ -52,7 +52,7 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	cv::dilate(temp, temp, cv::Mat(1, 1, CV_8UC1), cv::Point(0, 0), 2, 1, 1);
 	cv::threshold(temp, temp, 25, 255, CV_THRESH_BINARY);
 
-	Movement camera_movement;
+	
 	camera_movement.average_point = updateAverageLocation(temp);
 	cvtColor(temp, temp, CV_GRAY2RGB);
 	cv::circle(temp, camera_movement.average_point, 5, cv::Scalar(255, 128, 128), 5.0);
@@ -60,8 +60,8 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 	//std::cout << "X: " << average.x << " Y: " << average.y << "\n";
 
 	determineDirection(camera_movement);
-	//std::cout << camera_movement.right << camera_movement.left << "\n";
-	//std::cout << camera_movement.up << camera_movement.down << "\n\n";
+	std::cout << camera_movement.right << camera_movement.left << "\n";
+	std::cout << camera_movement.up << camera_movement.down << "\n\n";
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();

@@ -36,9 +36,7 @@ class CalibrationProcessor : Processor {
 	static std::deque<CameraDevice> camera_locations;
 
 	CalibrationParameters camera_parameters;
-	
-
-	cv::Mat first_frame;
+	Movement camera_movement;
 
 
 private:
