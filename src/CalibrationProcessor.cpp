@@ -8,25 +8,31 @@
 std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	frame = f;
 
-	//calibrateLens(frame->getData());
+	cv::GaussianBlur(frame->getData(), frame->getData(), cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
 
-	cv::Mat temp = frame->getData();
-	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
-	cvtColor(temp, temp, CV_BGR2GRAY);
+	calibrateLens(frame->getData());
 
-	calibratePosition(temp);
+	/*cvtColor(frame->getData(), frame->getData(), CV_BGR2GRAY);
 
-	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
+	calibratePosition(frame->getData()); */
+
+	return std::make_shared<Frame>(frame->getData(), frame->getCameraID(), frame->getID());
 }
 
 /*
 	calibrateLens
 */
 void CalibrationProcessor::calibrateLens(cv::Mat & current_frame) {
+	auto start = std::chrono::system_clock::now();
 	std::shared_ptr<CameraDevice> camera = CameraDevice::devices[frame->getCameraID()];
 
-	std::cout << camera->getOpenCVProperty(CV_CAP_PROP_CONTRAST) << "\n";
-	camera->setOpenCVProperty(CV_CAP_PROP_CONTRAST, 30);
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
+		std::chrono::system_clock::now() - start).count();
+
+	std::cout << duration << "\n";
+
+//	std::cout << camera->getOpenCVProperty(CV_CAP_PROP_CONTRAST) << "\n";
+//	camera->setOpenCVProperty(CV_CAP_PROP_CONTRAST, 30);
 }
 
 /*
