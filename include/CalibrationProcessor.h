@@ -19,15 +19,23 @@ struct CalibrationParameters {
 	unsigned long long background_id = 9999999999999;
 };
 
-struct Movement {
+struct PositionCalibration {
 	cv::Point previous_point;
-	cv::Point average_point;
+	cv::Point center_of_mass;
 
 	bool right = false;
 	bool left = false;
 	
 	bool up = false;
 	bool down = false;
+
+	int last_known_position = 0; /* 0-right, 1-left, 2-top, 3-bottom */
+
+	std::vector<int> loc_history;
+};
+
+struct LensCalibration {
+
 };
 
 class CalibrationProcessor : Processor {
@@ -36,8 +44,7 @@ class CalibrationProcessor : Processor {
 	static std::deque<CameraDevice> camera_locations;
 
 	CalibrationParameters camera_parameters;
-	Movement camera_movement;
-
+	PositionCalibration camera_movement;
 
 private:
 	// Calibration Functions
@@ -45,9 +52,10 @@ private:
 	void calibratePosition(cv::Mat & current_frame);
 
 	// Helpers
-	cv::Point updateAverageLocation(cv::Mat image);
-	void determineDirection(Movement & movement);
-	void subtractBackground(CalibrationParameters & parameters, cv::Mat & currentframe);
+	void updateCenterOfMass(PositionCalibration & movement, cv::Mat & current_frame);
+	void updateAverageLocation(PositionCalibration & movement);
+	void determineDirection(PositionCalibration & movement);
+	void subtractBackground(CalibrationParameters & parameters, cv::Mat & current_frame);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
