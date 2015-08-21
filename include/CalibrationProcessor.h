@@ -14,21 +14,32 @@ struct CalibrationParameters {
 	int camera_id;
 
 	bool found_features;
+
+	cv::Mat background;
+	unsigned long long background_id = 9999999999999;
+};
+
+struct Movement {
+	cv::Point previous_point;
+	cv::Point average_point;
+
+	bool right = false;
+	bool left = false;
+	
+	bool up = false;
+	bool down = false;
 };
 
 class CalibrationProcessor : Processor {
 	std::shared_ptr<Frame> frame;
-	std::deque<CameraDevice> camera_locations;
+	
+	static std::deque<CameraDevice> camera_locations;
 
-	std::vector<CalibrationParameters> cameras_tested;
+	CalibrationParameters camera_parameters;
+	
 
 	cv::Mat first_frame;
-	unsigned long long first_frame_id = 9999999999999;
-	
-	cv::Point previous_point;
-	
-	int number_right = 0;
-	int number_left = 0;
+
 
 private:
 	// Calibration Functions
@@ -37,7 +48,7 @@ private:
 
 	// Helpers
 	cv::Point updateAverageLocation(cv::Mat image);
-	void determineDirection();
+	void determineDirection(Movement & movement);
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
