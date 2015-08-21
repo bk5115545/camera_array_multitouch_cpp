@@ -41,8 +41,8 @@ class CalibrationProcessor : Processor {
 
 private:
 	// Calibration Functions
-	void calibrateLens();
-	cv::Mat calibratePosition();
+	void calibrateLens(cv::Mat & current_frame);
+	void calibratePosition(cv::Mat & current_frame);
 
 	// Helpers
 	cv::Point updateAverageLocation(cv::Mat image);

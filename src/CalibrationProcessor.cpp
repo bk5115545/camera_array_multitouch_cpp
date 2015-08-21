@@ -8,7 +8,11 @@
 std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	frame = f;
 
-	cv::Mat temp = calibratePosition();
+	cv::Mat temp = frame->getData();
+	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
+	cvtColor(temp, temp, CV_BGR2GRAY);
+
+	calibratePosition(temp);
 
 	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
 }
@@ -16,7 +20,7 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 /*
 	calibrateLens
 */
-void CalibrationProcessor::calibrateLens() {
+void CalibrationProcessor::calibrateLens(cv::Mat & current_frame) {
 	std::shared_ptr<CameraDevice> camera = CameraDevice::devices[frame->getCameraID()];
 
 	std::cout << camera->getOpenCVProperty(CV_CAP_PROP_CONTRAST) << "\n";
@@ -26,26 +30,19 @@ void CalibrationProcessor::calibrateLens() {
 /*
 	calibratePosition
 */
-cv::Mat CalibrationProcessor::calibratePosition() {
+void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
 	auto start = std::chrono::system_clock::now();
-
-	/*
-		Set Up Temporary Mat Container
-	*/
-	cv::Mat temp = frame->getData();
-	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
-	cvtColor(temp, temp, CV_BGR2GRAY);
 
 	/*
 		Initial frame
 	*/
 	if (frame->getID() < camera_parameters.background_id ) {
 		camera_parameters.background_id = frame->getID();
-		camera_parameters.background = temp.clone();
+		camera_parameters.background = current_frame.clone();
 	}
 
-	subtractBackground(camera_parameters, temp);
-	camera_movement.average_point = updateAverageLocation(temp);
+	subtractBackground(camera_parameters, current_frame);
+	camera_movement.average_point = updateAverageLocation(current_frame);
 	determineDirection(camera_movement);
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
@@ -53,8 +50,6 @@ cv::Mat CalibrationProcessor::calibratePosition() {
 
 	std::cout << duration << "\n";
 	camera_movement.previous_point = camera_movement.average_point;
-
-	return temp;
 }
 
 /*
