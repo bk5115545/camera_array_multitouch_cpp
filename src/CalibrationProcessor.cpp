@@ -9,11 +9,12 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 	frame = f;
 
 	cv::Mat temp = frame->getData();
-	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
-	cvtColor(temp, temp, CV_BGR2GRAY);
 
-	//calibrateLens(temp);
-	calibratePosition(temp); 
+	calibrateLens(temp);
+	
+	cv::GaussianBlur(temp, temp, cv::Size(1, 1), 0.0, 0.0, cv::BORDER_DEFAULT);
+//	cvtColor(temp, temp, CV_BGR2GRAY);
+	//calibratePosition(temp); 
 
 	return std::make_shared<Frame>(temp, frame->getCameraID(), frame->getID());
 }
@@ -24,7 +25,7 @@ std::shared_ptr<Frame> CalibrationProcessor::run(std::shared_ptr<Frame> f) {
 void CalibrationProcessor::calibrateLens(cv::Mat & current_frame) {
 	auto start = std::chrono::system_clock::now();
 
-	// Surf ~500 ms
+
 
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 		std::chrono::system_clock::now() - start).count();
@@ -49,7 +50,6 @@ void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
 	determineDirection(camera_movement);
 
 	//updateAverageLocation(camera_movement);
-	//cvCvtColor(current_frame, current_frame, CV_GRAY2RGB);
 	
 	cvtColor(current_frame, current_frame, CV_GRAY2RGB);
 	cv::circle(current_frame, camera_movement.previous_point, 5, cv::Scalar(128, 128, 255), 5.0);
@@ -68,7 +68,6 @@ void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
  *
  */
 
-
 /*
 	updateCenterOfMass estimates the center of an object by detecting the average location
 	of all non-zero pixels in a binary mask.
@@ -79,6 +78,7 @@ void CalibrationProcessor::calibratePosition(cv::Mat & current_frame) {
 */
 void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv::Mat & temp) {
 	int num = cv::countNonZero(temp);
+	//std::cout << num << "\n";
 
 	if (num > 0) {
 		std::vector<cv::Point> white_locs;
@@ -94,7 +94,7 @@ void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv
 	}
 
 	else {
-		movement.loc_history.clear();
+		updateLastLocation(movement);
 	}
 }
 
@@ -110,20 +110,16 @@ void CalibrationProcessor::updateCenterOfMass(PositionCalibration & movement, cv
 	WARNING
 		Not correctly implemented yet... I think
 */
-void CalibrationProcessor::updateAverageLocation(PositionCalibration & movement) {
-	
-	if (movement.loc_history.size() > 0) {
-		int sum = 0;
+void CalibrationProcessor::updateLastLocation(PositionCalibration & movement) {
+	int x = movement.previous_point.x;
+	int y = movement.previous_point.y;
 
-		for (auto wall : movement.loc_history) {
-			sum += wall;
-		}
+	if (x >= 0 && x <= 15) {
+		movement.last_known_position = 1;
+	}
 
-		int average = int(floor(sum / movement.loc_history.size()));
-		
-		movement.last_known_position = average;
-
-		std::cout << average << " " << movement.loc_history.size() << " " << sum << "\n";
+	else if (y >= 0 && y <= 15) {
+		movement.last_known_position = 2;
 	}
 }
 

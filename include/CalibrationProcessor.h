@@ -58,7 +58,7 @@ private:
 
 	// Position Calibration
 	void updateCenterOfMass(PositionCalibration & movement, cv::Mat & current_frame);
-	void updateAverageLocation(PositionCalibration & movement);
+	void updateLastLocation(PositionCalibration & movement);
 	void determineDirection(PositionCalibration & movement);
 	void subtractBackground(CalibrationParameters & parameters, cv::Mat & current_frame);
 
