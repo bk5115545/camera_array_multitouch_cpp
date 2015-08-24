@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\MotionThreshold.cpp" />
     <ClCompile Include="src\BlobProcessor.cpp" />
     <ClCompile Include="src\CameraDevice.cpp" />
     <ClCompile Include="src\ContourProcessor.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\MotionThreshold.h" />
     <ClInclude Include="include\BlobProcessor.h" />
     <ClInclude Include="include\CameraDevice.h" />
     <ClInclude Include="include\ContourProcessor.h" />

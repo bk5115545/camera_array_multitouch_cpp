@@ -30,6 +30,9 @@
     <ClCompile Include="src\BlobProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\MotionThreshold.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\FeatureContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\MotionThreshold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
