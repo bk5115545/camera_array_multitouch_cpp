@@ -19,7 +19,8 @@ std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
 
 	cv::Mat out;
 	cv::absdiff(f1, f2, out);
-	cv::threshold(out, out, 25, 255, CV_THRESH_BINARY);
+	cv::medianBlur(out, out, 3);
+	cv::threshold(out, out, 50, 255, CV_THRESH_BINARY);
 
 	f1 = f2;
 
@@ -27,6 +28,10 @@ std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
 	if (cv::countNonZero(out) > 0) {
 		cv::findNonZero(out, blah);
 	}
+
+	std::cout << blah.size() << "\n";
+
+	// Convert Blah to cv::Mat (Binary) and then render blah
 
 	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
 }
