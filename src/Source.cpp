@@ -23,7 +23,7 @@ int main(char* argsv,char argc) {
 		}
 	}
 
-	Transformer<MotionProcessor> tr(4);
+	Transformer<MotionProcessor> tr(1);
 
 	for(std::shared_ptr<CameraDevice> dev : devices) {
 		cv::namedWindow("testing " + std::to_string(dev->getID()),1);
