@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Processor.h"
-#include "MotionThreshold.h"
 
 class MotionProcessor : Processor {
 
@@ -12,8 +11,7 @@ class MotionProcessor : Processor {
 	unsigned long long first_frame_id = 9999999999999999999;
 
 private:
-	std::map<int, std::pair<cv::Point, cv::Point>> a;
-	void drawMotion();
+	cv::Mat convertListToMat(std::vector<cv::Point> points);
 
 public:
 	MotionProcessor();

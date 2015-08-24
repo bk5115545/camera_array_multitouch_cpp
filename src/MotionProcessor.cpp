@@ -20,22 +20,12 @@ std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
 	cv::Mat out;
 	cv::absdiff(f1, f2, out);
 	cv::medianBlur(out, out, 3);
-	cv::threshold(out, out, 50, 255, CV_THRESH_BINARY);
+
+	cv::cvtColor(out, out, CV_GRAY2RGB);
+	cv::Mat new_out = cv::Mat::zeros(f->getData().size(), f->getData().type());
+	cv::bitwise_and(f->getData(), out, new_out);
 
 	f1 = f2;
 
-	std::vector<cv::Point> blah;
-	if (cv::countNonZero(out) > 0) {
-		cv::findNonZero(out, blah);
-	}
-
-	std::cout << blah.size() << "\n";
-
-	// Convert Blah to cv::Mat (Binary) and then render blah
-
-	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
-}
-
-void MotionProcessor::drawMotion() {
-
+	return std::make_shared<Frame>(new_out, f->getCameraID(), f->getID());
 }
