@@ -6,8 +6,7 @@
 #include "Transformer.h"
 #include "Frame.h"
 
-#include "BlobProcessor.h"
-#include "ContourProcessor.h"
+#include "MotionProcessor.h"
 
 //#include "vld.h"
 
@@ -15,16 +14,16 @@ int main(char* argsv,char argc) {
 	bool rendering = true;
 	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
 
-	for(int i=1; i<8; i++) {
-		//printf("testing id %i\n",i);
+	for(int i=0; i<8; i++) {
+		printf("testing id %i\n",i);
 		std::shared_ptr<CameraDevice> dev = std::make_shared<CameraDevice>(CameraDevice(i));
 		if(dev->acquire()) {
 			devices.push_back(dev);
-			//printf("got id %i\n",i);
+			printf("got id %i\n",i);
 		}
 	}
 
-	Transformer<BlobProcessor> tr(4);
+	Transformer<MotionProcessor> tr(1);
 
 	for(std::shared_ptr<CameraDevice> dev : devices) {
 		cv::namedWindow("testing " + std::to_string(dev->getID()),1);
