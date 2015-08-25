@@ -10,10 +10,6 @@ class MotionProcessor : Processor {
 
 	unsigned long long first_frame_id = 9999999999999999999;
 
-private:
-	cv::Mat convertListToMat(std::vector<cv::Point> points);
-
 public:
-	MotionProcessor();
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
 };
