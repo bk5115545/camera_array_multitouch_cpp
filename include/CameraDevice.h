@@ -12,7 +12,10 @@ class CameraDevice {
 		bool acquired = false;
 		int camera_id = -1;
 		int frame_id = 0;
+
 		cv::VideoCapture capture;
+
+		std::string window_name;
 
 	public:
 		CameraDevice(int camera_id);
@@ -27,7 +30,7 @@ class CameraDevice {
 		std::shared_ptr<Frame> decodeFrame(int channel=0);
 		int getID();
 
-		bool calibrate_lens();
+		std::string getName();
 
 		inline double getFPS();
 		inline bool setFPS(double value);
