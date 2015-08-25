@@ -25,6 +25,7 @@ class Transformer {
 		bool running = true;
 		
 		std::vector<std::thread*> threads;
+
 	public:
 		Transformer(int thread_limit) {
 			max_threads = thread_limit;
@@ -42,19 +43,26 @@ class Transformer {
 			while(running) {
 				std::shared_ptr<Frame> frame;
 				jobs.wait_and_pop(frame);
-				if(frame.get() == nullptr) continue;
+				
+				if(frame.get() == nullptr)
+					continue;
+				
 				job_count--;
 				std::shared_ptr<Frame> result = processor->run(frame);
-				if(result.get() != nullptr) results.push(result);
+				
+				if(result.get() != nullptr) 
+					results.push(result);
 			}
 
 			class_threads--;
 			instance_threads--;
+
 			//this be my magic lambda of DOOOOMMMMMMMmmmmmm!
 			threads.erase(std::find_if(threads.begin(),threads.end(),
 				[=](std::thread* thread) {
-				return std::this_thread::get_id() == thread->get_id();
-			}));
+					return std::this_thread::get_id() == thread->get_id();
+				}
+			));
 			//don't touch it but it might be good to check that this thread hasn't been mistakenly deleted by another thread
 			//because windows reuses thread_ids.  it's probably not possible but meh.  ::TODO:: check this
 		}
@@ -68,8 +76,8 @@ class Transformer {
 		int totalTransformerThreads(){
 			return class_threads;
 		}
-		int enqueue(std::shared_ptr<Frame> frame) {
 
+		int enqueue(std::shared_ptr<Frame> frame) {
 			if(!jobs.push(frame)) {
 				std::this_thread::sleep_for(std::chrono::microseconds(3));
 				return job_count/ (instance_threads > 0 ? instance_threads.operator int() : 1);
@@ -80,6 +88,7 @@ class Transformer {
 			if(instance_threads < job_count && instance_threads < max_threads) {
 				std::thread* newThread = new std::thread([=] { run(); });
 				threads.push_back(newThread);
+				
 				instance_threads++;
 				class_threads++;
 			}
@@ -89,8 +98,10 @@ class Transformer {
 
 		std::shared_ptr<Frame> popResult() {
 			std::shared_ptr<Frame> output = nullptr;
+
 			if(results.try_pop(output))
 				return output; //return result
+
 			return std::shared_ptr<Frame>(); //return nullptr
 		}
 
