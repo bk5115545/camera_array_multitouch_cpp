@@ -8,7 +8,7 @@
 
 #include "MotionProcessor.h"
 
-int main(char* argsv,char argc) {
+int main(int argv, char** argc) {
 	bool rendering = true;
 	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
 
