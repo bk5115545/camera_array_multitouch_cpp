@@ -30,7 +30,7 @@
     <ClCompile Include="src\BlobProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\src\MotionProcessor.cpp">
+    <ClCompile Include="src\MotionProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="include\FeatureContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Alex%27s Data\GitHub\camera_array_multitouch_cpp\include\MotionProcessor.h">
+    <ClInclude Include="include\MotionProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
