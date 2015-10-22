@@ -3,17 +3,25 @@
 
 #include "Processor.h"
 
-class MotionProcessor : Processor {
+#include <math.h>
+#include <chrono>
+#include <queue>
+#include <algorithm>
 
-	cv::Mat f1;
-	cv::Mat f2;
+class MotionProcessor : Processor {
+private:
+	cv::Mat current_frame;
+	cv::Mat previous_frame;
+	cv::Mat processed_frame;
+
+	std::vector<cv::Mat> motion_masks;
 
 	bool first_frame = true;
+	
+	void calculateMotionMask();
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
 
-private:
-	cv::Point getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts);
-	bool findRGBPoint(std::vector<cv::Point> point_list, cv::Point to_find);
+
 };
