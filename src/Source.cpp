@@ -22,10 +22,12 @@ int main(int argv, char** argc) {
 		}
 	}
 
-	Transformer<MotionProcessor> bp (1);
+	Transformer<MotionProcessor> bp (2);
 	Transformer<BlobProcessor> mp (1);
 
 	while (rendering) {
+		auto start = std::chrono::system_clock::now();
+
 		for(std::shared_ptr<CameraDevice> dev : devices) {
 			std::shared_ptr<Frame> inputFrame = dev->getFrame();
 			
@@ -39,6 +41,11 @@ int main(int argv, char** argc) {
 					rendering = false;
 			}
 		}
+
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
+			std::chrono::system_clock::now() - start).count();
+
+		std::cout << duration << "\n";
 	}
 	
 	return 0;

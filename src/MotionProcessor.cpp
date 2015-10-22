@@ -7,7 +7,7 @@
 #include <algorithm>
 
 std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
-	auto start = std::chrono::system_clock::now();
+//	auto start = std::chrono::system_clock::now();
 	
 	cv::Mat temp = f->getData();
 
@@ -26,10 +26,10 @@ std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
 	cv::bitwise_and(f->getData(), out, out);
 
 	f1 = f2;
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
-		std::chrono::system_clock::now() - start).count();
+//	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
+//		std::chrono::system_clock::now() - start).count();
 
-	std::cout << duration << "\n";
+//	std::cout << duration << "\n";
 
 	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
 }
