@@ -6,7 +6,7 @@
 #include "Frame.h"
 #include "Processor.h"
 
-class BlobProcessor: Processor {
+class BlobProcessor : public Processor {
 private:
 	
 	template<typename T, typename K>

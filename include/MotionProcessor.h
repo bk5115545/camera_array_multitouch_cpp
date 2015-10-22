@@ -3,7 +3,7 @@
 
 #include "Processor.h"
 
-class MotionProcessor : Processor {
+class MotionProcessor : public Processor {
 
 	cv::Mat f1;
 	cv::Mat f2;

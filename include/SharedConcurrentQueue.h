@@ -4,6 +4,8 @@
 
 #include <boost/timer.hpp>
 
+#include "Frame.h"
+
 template<typename Data> class concurrent_queue {
 	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from std::shared_ptr<Frame>");
 
@@ -37,6 +39,10 @@ template<typename Data> class concurrent_queue {
 
 			condition.notify_one();
 			return true;
+		}
+
+		int size() {
+			return max_size;
 		}
 
 		bool empty() const {
