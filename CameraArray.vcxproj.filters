@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Processors">
+      <UniqueIdentifier>{c4ed03ed-151c-4cf8-880c-70e7f54027b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Processors">
+      <UniqueIdentifier>{6d172e61-e4e2-460d-b109-997a055d2499}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Source.cpp">
@@ -24,16 +30,19 @@
     <ClCompile Include="src\Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ContourProcessor.cpp">
+    <ClCompile Include="src\Transformer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BlobProcessor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Processors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContourProcessor.cpp">
+      <Filter>Source Files\Processors</Filter>
     </ClCompile>
     <ClCompile Include="src\MotionProcessor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Processors</Filter>
     </ClCompile>
-    <ClCompile Include="src\Transformer.cpp">
+    <ClCompile Include="src\FrameCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,19 +59,22 @@
     <ClInclude Include="include\SharedConcurrentQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Processor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ContourProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BlobProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\FeatureContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\BlobProcessor.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ContourProcessor.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
     <ClInclude Include="include\MotionProcessor.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Processor.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FrameCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

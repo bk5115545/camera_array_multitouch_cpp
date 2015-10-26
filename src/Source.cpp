@@ -8,6 +8,7 @@
 
 #include "MotionProcessor.h"
 #include "BlobProcessor.h"
+#include "ContourProcessor.h"
 
 int main(int argv, char** argc) {
 	bool rendering = true;
@@ -24,8 +25,8 @@ int main(int argv, char** argc) {
 
 	Transformer main_chain;
 
-	main_chain.addProcessor(new MotionProcessor);
-	//main_chain.addProcessor(new BlobProcessor);
+	//main_chain.addProcessor(new ContourProcessor);
+	main_chain.addProcessor(new BlobProcessor());
 
 	while (rendering) {
 		auto start = std::chrono::system_clock::now();
@@ -50,31 +51,6 @@ int main(int argv, char** argc) {
 
 		std::cout << duration << "\n";
 	}
-
-	/*
-	while (rendering) {
-		auto start = std::chrono::system_clock::now();
-
-		for(std::shared_ptr<CameraDevice> dev : devices) {
-			std::shared_ptr<Frame> inputFrame = dev->getFrame();
-			
-			bp.enqueue(inputFrame);
-			std::shared_ptr<Frame> result = bp.popResult();
-
-			if(result.get() != nullptr) {
-				cv::imshow(dev->getName(), result->getData());
-				
-				if(cv::waitKey(30) >= 0) 
-					rendering = false;
-			}
-		}
-
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
-			std::chrono::system_clock::now() - start).count();
-
-		std::cout << duration << "\n";
-	}
-	*/
 
 	return 0;
 }

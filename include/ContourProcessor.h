@@ -4,7 +4,7 @@
 
 #include "Processor.h"
 
-class ContourProcessor: Processor {
+class ContourProcessor: public Processor {
 
 private:
 	std::map<int,std::pair<cv::Point,cv::Point>> trackedParameters;
