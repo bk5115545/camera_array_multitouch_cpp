@@ -34,6 +34,10 @@ std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
 	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
 }
 
+void MotionProcessor::setCached(FrameCache cache) {
+	//cached = cache;
+}
+
 cv::Point MotionProcessor::getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts) {
 	cv::Point avg;
 

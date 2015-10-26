@@ -7,14 +7,15 @@
 
 #include "SharedConcurrentQueue.h"
 #include "Frame.h"
+#include "FrameCache.h"
 #include "Processor.h"
 
 class Transformer {
 private:
-	std::vector<Processor *> processors;
+	FrameCache * input_cache;
+	FrameCache * output_cache;
 
-	concurrent_queue<std::shared_ptr<Frame>> frames;
-	concurrent_queue<std::shared_ptr<Frame>> result_frames;
+	std::vector<Processor *> processors;
 
 public:
 	Transformer();
@@ -28,4 +29,5 @@ public:
 	std::shared_ptr<Frame> getResult();
 
 	//int removeProcessor();
+
 };
