@@ -1,4 +1,8 @@
-﻿#include <forward_list>
+﻿
+#pragma once
+
+#include <atomic>
+#include <forward_list>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
@@ -14,12 +18,16 @@ template<typename Data> class concurrent_queue {
 		boost::mutex queue_mutex;
 		boost::condition_variable condition;
 
-		const int max_size = 15;
-		std::atomic<int> current_size = 0; //store size seperate so we can access it without locking the queue
+		const unsigned int max_size = 15;
+		std::atomic<unsigned int> current_size = 0;
 
 	public:
 		bool push(Data const& data) {
-			if(current_size >= max_size) return false;
+			//trash oldest content if queue is full
+			if (current_size >= max_size) {
+				Data d;
+				try_pop(d);
+			}
 
 			boost::mutex::scoped_lock lock(queue_mutex);
 
@@ -73,4 +81,14 @@ template<typename Data> class concurrent_queue {
 			current_size--;
 		}
 
+		bool peek(int i, Data & peeked_value) {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			auto iter = queue.begin();
+			if (i >= current_size) i = current_size;
+			while (i-- > 0) {
+				peeked_value = *iter;
+				iter++;
+			}
+			return peeked_value != nullptr && i==0;
+		}
 };
