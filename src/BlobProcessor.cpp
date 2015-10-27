@@ -4,19 +4,21 @@
 BlobProcessor::~BlobProcessor() {
 	if (input_cache) delete input_cache;
 	if (output_cache) delete output_cache;
-
 }
 
 
-std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
+void BlobProcessor::run() {
 	//Frame recent = cache.getRecent().first;
 	//Frame oldest = cache.getRecent().second;
 	
-	cv::Mat recent_mat, oldest_mat;
+	std::shared_ptr<Frame> frame = input_cache->get(0);
+	output_cache->cache(input_cache->get(0));
 
-	cv::Mat current = frame->getData();
+	//cv::Mat recent_mat, oldest_mat;
+
+//	cv::Mat current = frame->getData();
 	
-	cv::Mat old_motion, recent_motion, result;
+//	cv::Mat old_motion, recent_motion, result;
 
 	//we probably need a blur here on the input frame to reduce camera noise.
 //	cv::medianBlur(frame->getData(), frame->getData(),3);
@@ -26,8 +28,10 @@ std::shared_ptr<Frame> BlobProcessor::run(std::shared_ptr<Frame> frame) {
 
 //	cv::cvtColor(result, result, cv::COLOR_BGR2GRAY);
 	
-	return frame;
+	
 	//return findBlob(result, frame);
+
+	return;
 }
 
 void BlobProcessor::setCached(FrameCache * input_cache, FrameCache * output_cache) {

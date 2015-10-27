@@ -14,6 +14,6 @@ private:
 public:
 	~BlobProcessor();
 
-	std::shared_ptr<Frame> run(std::shared_ptr<Frame> frame);
+	void run();
 	void setCached(FrameCache * input_cache, FrameCache * output_cache);
 };
