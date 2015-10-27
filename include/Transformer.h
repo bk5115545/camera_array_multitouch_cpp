@@ -16,6 +16,7 @@ private:
 	FrameCache * output_cache;
 
 	std::vector<Processor *> processors;
+	int current_processor = 0;
 
 public:
 	Transformer();
@@ -27,7 +28,4 @@ public:
 	int processFrames();
 
 	std::shared_ptr<Frame> getResult();
-
-	//int removeProcessor();
-
 };
