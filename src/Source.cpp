@@ -27,7 +27,6 @@ int main(int argv, char** argc) {
 
 	//main_chain.addProcessor(new ContourProcessor);
 	main_chain.addProcessor(new BlobProcessor());
-	//main_chain.addProcessor(new BlobProcessor());
 
 	while (rendering) {
 		auto start = std::chrono::system_clock::now();
@@ -39,7 +38,7 @@ int main(int argv, char** argc) {
 			main_chain.processFrames();
 			std::shared_ptr<Frame> result = main_chain.getResult();
 
-			if (result != nullptr) { 
+			if (result.get() != nullptr) {
 				cv::imshow(dev->getName(), result->getData());
 
 				if (cv::waitKey(30) >= 0)

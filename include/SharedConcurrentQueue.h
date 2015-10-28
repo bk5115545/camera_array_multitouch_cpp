@@ -40,7 +40,7 @@ template<typename Data> class concurrent_queue {
 				catch (std::exception e) {}
 			}
 
-			queue.insert(index, data); //insert by iterator for O(1) instead of by index at O(n)
+			queue.insert(index,data); //insert by iterator for O(1) instead of by index at O(n)
 			current_size++;
 
 			lock.unlock(); //unlock before notify
@@ -81,25 +81,14 @@ template<typename Data> class concurrent_queue {
 			current_size--;
 		}
 
-		void wait_until_not_empty() {
-			boost::mutex::scoped_lock lock(queue_mutex);
-			while (current_size == 0) {
-				condition.wait(lock); //unlocks and waits.  re-locks on return
-			}
-		}
-
 		bool peek(int i, Data & peeked_value) {
 			boost::mutex::scoped_lock lock(queue_mutex);
-
-			if (i >= current_size)
-				i = current_size;
-
 			auto iter = queue.begin();
-			do {
+			if (i >= current_size) i = current_size;
+			while (i-- > 0) {
 				peeked_value = *iter;
 				iter++;
-			} while (i-- > 0);
-
-			return peeked_value != nullptr;
+			}
+			return peeked_value != nullptr && i==0;
 		}
 };
