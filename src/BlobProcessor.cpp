@@ -12,7 +12,7 @@ void BlobProcessor::run() {
 	//Frame oldest = cache.getRecent().second;
 	
 	std::shared_ptr<Frame> frame = input_cache->get(0);
-	output_cache->cache(input_cache->get(0));
+	output_cache->cache(frame);
 
 	//cv::Mat recent_mat, oldest_mat;
 

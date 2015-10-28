@@ -81,14 +81,24 @@ template<typename Data> class concurrent_queue {
 			current_size--;
 		}
 
+		void wait_until_not_empty() {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			while (current_size == 0) {
+				condition.wait(lock); //unlocks and waits.  re-locks on return
+			}
+		}
+
 		bool peek(int i, Data & peeked_value) {
 			boost::mutex::scoped_lock lock(queue_mutex);
 			auto iter = queue.begin();
+
 			if (i >= current_size) i = current_size;
-			while (i-- > 0) {
+
+			do {
 				peeked_value = *iter;
 				iter++;
-			}
-			return peeked_value != nullptr && i==0;
+			} while (i-- > 0);
+
+			return peeked_value != nullptr;
 		}
 };

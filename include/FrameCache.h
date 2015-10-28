@@ -11,12 +11,9 @@ private:
 	concurrent_queue<std::shared_ptr<Frame>> _cache;
 
 public:
-	FrameCache();
-
 	void cache(std::shared_ptr<Frame> f);
-	std::shared_ptr<Frame> get(int index);
 	void empty();
 
-	// first = most recent (not current), second = second recent
-	std::pair<Frame, Frame> getRecent();
+	std::shared_ptr<Frame> get(int index);
+	std::shared_ptr<Frame> get_nowait(int index);
 };
