@@ -3,13 +3,25 @@
 
 #include "Processor.h"
 
+#include <math.h>
+#include <chrono>
+#include <queue>
+#include <algorithm>
+
 class MotionProcessor : Processor {
+private:
+	cv::Mat current_frame;
+	cv::Mat previous_frame;
+	cv::Mat processed_frame;
 
-	cv::Mat f1;
-	cv::Mat f2;
+	std::vector<cv::Mat> motion_masks;
 
-	unsigned long long first_frame_id = 9999999999999999999;
+	bool first_frame = true;
+	
+	void calculateMotionMask();
 
 public:
 	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
+
+
 };

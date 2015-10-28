@@ -7,6 +7,7 @@
 #include "Frame.h"
 
 #include "MotionProcessor.h"
+#include "BlobProcessor.h"
 
 int main(int argv, char** argc) {
 	bool rendering = true;
@@ -21,14 +22,15 @@ int main(int argv, char** argc) {
 		}
 	}
 
-	Transformer<MotionProcessor> mp (2);
+	Transformer<MotionProcessor> bp (1);
+	Transformer<BlobProcessor> mp (1);
 
 	while (rendering) {
 		for(std::shared_ptr<CameraDevice> dev : devices) {
 			std::shared_ptr<Frame> inputFrame = dev->getFrame();
 			
-			mp.enqueue(inputFrame);
-			std::shared_ptr<Frame> result = mp.popResult();
+			bp.enqueue(inputFrame);
+			std::shared_ptr<Frame> result = bp.popResult();
 
 			if(result.get() != nullptr) {
 				cv::imshow(dev->getName(), result->getData());
