@@ -7,7 +7,6 @@
 #include <algorithm>
 
 void MotionProcessor::run() {
-	std::cout << "Processing motion" << std::endl;
 	std::shared_ptr<Frame> frame = input_cache->get(0);
 	output_cache->cache(frame);
 

@@ -2,8 +2,8 @@
 #include "Transformer.h"
 
 Transformer::Transformer() {
-	input_cache = new FrameCache();
-	output_cache = new FrameCache();
+	input_cache = new FrameCache(2);
+	output_cache = new FrameCache(2);
 }
 
 Transformer::~Transformer() {

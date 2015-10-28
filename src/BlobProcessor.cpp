@@ -11,7 +11,6 @@ void BlobProcessor::run() {
 	//Frame recent = cache.getRecent().first;
 	//Frame oldest = cache.getRecent().second;
 
-	std::cout << "Processing blobs" << std::endl;
 	std::shared_ptr<Frame> frame = input_cache->get(0);
 	output_cache->cache(frame);
 

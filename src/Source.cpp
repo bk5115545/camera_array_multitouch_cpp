@@ -43,7 +43,7 @@ int main(int argv, char** argc) {
 			if (result.get() != nullptr) {
 				cv::imshow(dev->getName(), result->getData());
 
-				if (cv::waitKey(30) >= 0)
+				if (cv::waitKey(2) >= 0)
 					rendering = false;
 			}
 		}

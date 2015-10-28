@@ -10,8 +10,6 @@ private:
 	cv::Mat f1;
 	cv::Mat f2;
 
-	FrameCache cached;
-
 	bool first_frame = true;
 
 	// Public methods

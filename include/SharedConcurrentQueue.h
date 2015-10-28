@@ -18,10 +18,12 @@ template<typename Data> class concurrent_queue {
 		boost::mutex queue_mutex;
 		boost::condition_variable condition;
 
-		const unsigned int max_size = 15;
+		
 		std::atomic<unsigned int> current_size = 0;
 
 	public:
+		unsigned int max_size = 15;
+		
 		bool push(Data const& data) {
 			//trash oldest content if queue is full
 			if (current_size >= max_size) {
