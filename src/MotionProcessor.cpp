@@ -42,31 +42,28 @@ void MotionProcessor::setCached(FrameCache * input_cache, FrameCache * output_ca
 	this->output_cache = output_cache;
 }
 
-cv::Point MotionProcessor::getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts) {
-	cv::Point avg;
+void MotionProcessor::calculateMotionMask() {
+	cv::Mat canny_output;
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
 
-	if (nonzero_pts.size() > 0) {
-		cv::Scalar avg_s_loc = cv::mean(nonzero_pts);
+	float thresh = 100;
+	//cv::Canny(processed_frame, canny_output, thresh, thresh * 2, 3);
 
-		avg.x = avg_s_loc[0];
-		avg.y = avg_s_loc[1];
+	cv::findContours(canny_output, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
-		cv::circle(mat, avg, 2, cv::Scalar(128, 128, 255));
-
-		return avg;
-	}
-
-	avg.x = -1;
-	avg.y = -1;
+	cv::Mat drawing = cv::Mat::zeros(canny_output.size(), CV_8UC3);
 	
-	return avg;	
-}
+	std::vector<std::vector<cv::Point>> contours_poly(contours.size());
+	std::vector<cv::Rect> motion_rects;
 
-bool MotionProcessor::findRGBPoint(std::vector<cv::Point> point_list, cv::Point to_find) {
-	for (int i = 0; i < point_list.size(); i++) {
-		if (point_list.at(i) == to_find)
-			return true;
+	for (int i = 0; i < contours.size(); i++) {
+		cv::approxPolyDP(cv::Mat(contours[i]), contours_poly[i], 3, true);
+		motion_rects.push_back(cv::boundingRect(cv::Mat(contours_poly[i])));
 	}
 
-	return false;
+	for (size_t i = 0; i < contours.size(); i++) {
+		cv::Scalar color = cv::Scalar(100,0,0);
+	//	rectangle(processed_frame, motion_rects[i].tl(), motion_rects[i].br(), color, 2, 8, 0);
+	}
 }

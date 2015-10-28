@@ -11,6 +11,8 @@ private:
 	cv::Mat f2;
 
 	bool first_frame = true;
+	
+	void calculateMotionMask();
 
 	// Public methods
 public:
@@ -21,6 +23,4 @@ public:
 private:
 	cv::Point getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts);
 	bool findRGBPoint(std::vector<cv::Point> point_list, cv::Point to_find);
-
-
 };
