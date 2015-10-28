@@ -1,8 +1,14 @@
-﻿#include <forward_list>
+﻿
+#pragma once
+
+#include <atomic>
+#include <forward_list>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
 #include <boost/timer.hpp>
+
+#include "Frame.h"
 
 template<typename Data> class concurrent_queue {
 	static_assert(std::is_base_of<std::shared_ptr<Frame>, Data>::value,"ConcurrentQueue template arguement must be derrived from std::shared_ptr<Frame>");
@@ -12,12 +18,18 @@ template<typename Data> class concurrent_queue {
 		boost::mutex queue_mutex;
 		boost::condition_variable condition;
 
-		const int max_size = 15;
-		std::atomic<int> current_size = 0; //store size seperate so we can access it without locking the queue
+		
+		std::atomic<unsigned int> current_size = 0;
 
 	public:
+		unsigned int max_size = 15;
+		
 		bool push(Data const& data) {
-			if(current_size >= max_size) return false;
+			//trash oldest content if queue is full
+			if (current_size >= max_size) {
+				Data d;
+				try_pop(d);
+			}
 
 			boost::mutex::scoped_lock lock(queue_mutex);
 
@@ -37,6 +49,10 @@ template<typename Data> class concurrent_queue {
 
 			condition.notify_one();
 			return true;
+		}
+
+		int size() {
+			return max_size;
 		}
 
 		bool empty() const {
@@ -67,4 +83,24 @@ template<typename Data> class concurrent_queue {
 			current_size--;
 		}
 
+		void wait_until_not_empty() {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			while (current_size == 0) {
+				condition.wait(lock); //unlocks and waits.  re-locks on return
+			}
+		}
+
+		bool peek(int i, Data & peeked_value) {
+			boost::mutex::scoped_lock lock(queue_mutex);
+			auto iter = queue.begin();
+
+			if (i >= current_size) i = current_size;
+
+			do {
+				peeked_value = *iter;
+				iter++;
+			} while (i-- > 0);
+
+			return peeked_value != nullptr;
+		}
 };
