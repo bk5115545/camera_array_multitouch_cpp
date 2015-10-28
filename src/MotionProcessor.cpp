@@ -6,36 +6,41 @@
 #include <queue>
 #include <algorithm>
 
-std::shared_ptr<Frame> MotionProcessor::run(std::shared_ptr<Frame> f) {
+void MotionProcessor::run() {
+	std::cout << "Processing motion" << std::endl;
+	std::shared_ptr<Frame> frame = input_cache->get(0);
+	output_cache->cache(frame);
+
 //	auto start = std::chrono::system_clock::now();
 	
-	cv::Mat temp = f->getData();
+//	cv::Mat temp = f->getData();
 
-	if (first_frame) {
-		first_frame = false;
-		f1 = temp;
-		f2 = temp;
-	}
+//	if (first_frame) {
+//		first_frame = false;
+//		f1 = temp;
+//		f2 = temp;
+//	}
 	
-	f2 = temp;
+//	f2 = temp;
 
-	cv::Mat out;
+//	cv::Mat out;
 	
-	cv::absdiff(f1, f2, out);
-	cv::erode(out, out, cv::Mat(5, 5, CV_8UC1), cv::Point(0, 0));
-	cv::bitwise_and(f->getData(), out, out);
+//	cv::absdiff(f1, f2, out);
+//	cv::erode(out, out, cv::Mat(5, 5, CV_8UC1), cv::Point(0, 0));
+//	cv::bitwise_and(f->getData(), out, out);
 
-	f1 = f2;
+//	f1 = f2;
 //	auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 //		std::chrono::system_clock::now() - start).count();
 
 //	std::cout << duration << "\n";
 
-	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
+//	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
 }
 
-void MotionProcessor::setCached(FrameCache cache) {
-	//cached = cache;
+void MotionProcessor::setCached(FrameCache * input_cache, FrameCache * output_cache) {
+	this->input_cache = input_cache;
+	this->output_cache = output_cache;
 }
 
 cv::Point MotionProcessor::getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts) {

@@ -4,6 +4,9 @@
 #include "Processor.h"
 
 class MotionProcessor : public Processor {
+
+// Private members
+private:
 	cv::Mat f1;
 	cv::Mat f2;
 
@@ -11,11 +14,15 @@ class MotionProcessor : public Processor {
 
 	bool first_frame = true;
 
+	// Public methods
 public:
-	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
-	void setCached(FrameCache cache);
+	void run();
+	void setCached(FrameCache * input_cache, FrameCache * output_cache);
 
+// Private methods
 private:
 	cv::Point getAveragePoint(cv::Mat & mat, std::vector<cv::Point> & nonzero_pts);
 	bool findRGBPoint(std::vector<cv::Point> point_list, cv::Point to_find);
+
+
 };

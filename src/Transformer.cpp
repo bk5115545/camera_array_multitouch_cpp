@@ -14,18 +14,19 @@ Transformer::~Transformer() {
 		delete input_cache;
 }
 
-/*
- * Should maybe be using a pointer to a pointer to make the chain explicit
-*/
 int Transformer::addProcessor(Processor * p) {
-	p->setCached(input_cache, output_cache);
-	processors.push_back(p);
-	
+	if (!processors.empty()) {
+		p->setCached(processors.back()->getOutputCache(), output_cache);
+		processors.push_back(p);
+	} else {
+		p->setCached(input_cache, output_cache);
+		processors.push_back(p);
+	}
+
 	return 0;
 }
 
 int Transformer::addFrame(std::shared_ptr<Frame> job) {
-	//std::cout << job->getID() << std::endl;
 	input_cache->cache(job);
 	return 0;
 }

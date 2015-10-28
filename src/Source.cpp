@@ -25,8 +25,10 @@ int main(int argv, char** argc) {
 
 	Transformer main_chain;
 
-	//main_chain.addProcessor(new ContourProcessor);
+	// main_chain.addProcessor(new ContourProcessor);
+	main_chain.addProcessor(new MotionProcessor());
 	main_chain.addProcessor(new BlobProcessor());
+	main_chain.addProcessor(new MotionProcessor());
 
 	while (rendering) {
 		auto start = std::chrono::system_clock::now();
