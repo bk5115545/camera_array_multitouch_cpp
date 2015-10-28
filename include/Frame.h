@@ -6,11 +6,15 @@
 #include <map>
 #include <chrono>
 
+#include "FeatureContainer.h"
+
 class Frame : public std::enable_shared_from_this<Frame> {
 	private:
 		cv::Mat _frame;
 		int _camera_id;
 		unsigned long long _frame_id;
+
+		FeatureContainer features;
 
 	public:
 		Frame();
@@ -20,6 +24,9 @@ class Frame : public std::enable_shared_from_this<Frame> {
 		cv::Mat getData();
 		int getCameraID();
 		unsigned long long getID();
+
+		void addFeature(std::string ID, Feature feature);
+		Feature getFeature(std::string ID);
 
 		operator cv::Mat() const;
 

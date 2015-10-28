@@ -31,6 +31,14 @@ unsigned long long Frame::getID() {
 	return _frame_id;
 }
 
+void Frame::addFeature(std::string ID, Feature feature) {
+	features.set(ID, feature);
+}
+
+Feature Frame::getFeature(std::string ID) {
+	return features.get(ID);
+}
+
 bool Frame::operator==(Frame f1) {
 	if (f1.getID() == _frame_id) {
 		return true;

@@ -26,7 +26,6 @@ int main(int argv, char** argc) {
 	Transformer main_chain;
 
 	// main_chain.addProcessor(new ContourProcessor);
-	main_chain.addProcessor(new MotionProcessor());
 	main_chain.addProcessor(new BlobProcessor());
 	main_chain.addProcessor(new MotionProcessor());
 
@@ -51,7 +50,7 @@ int main(int argv, char** argc) {
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
 			std::chrono::system_clock::now() - start).count();
 
-		std::cout << duration << "\n";
+		//std::cout << duration << "\n";
 	}
 
 	return 0;

@@ -1,26 +1,21 @@
 #pragma once
+
 #include <map>
 #include <memory>
 #include <string>
 
+#include <boost/any.hpp>
+
+// use boost::any_cast to cast the feature
+typedef boost::any Feature;
+
 class FeatureContainer {
 
 private:
-	std::map<std::string, std::shared_ptr<void>> trackedFeatures;
+	std::map<std::string, Feature> features;
 
 public:
-	FeatureContainer() {}
-
-	void set(std::string ID,std::shared_ptr<void> feature) {
-		trackedFeatures[ID] = feature;
-	}
-
-	std::shared_ptr<void> get(std::string ID) {
-		try {
-			return trackedFeatures.at(ID);
-		}
-		catch(std::out_of_range e) { return NULL; }
-	}
+	void set(std::string ID, Feature feature);
+	Feature get(std::string ID);
 };
 
-typedef std::shared_ptr<void> Feature;

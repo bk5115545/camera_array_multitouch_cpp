@@ -8,6 +8,10 @@
 
 void MotionProcessor::run() {
 	std::shared_ptr<Frame> frame = input_cache->get(0);
+
+	std::vector<int> blobs = boost::any_cast<std::vector<int>>(frame->getFeature("blobs"));
+	std::cout << blobs[0] << std::endl;
+
 	output_cache->cache(frame);
 
 //	auto start = std::chrono::system_clock::now();

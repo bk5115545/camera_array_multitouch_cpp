@@ -12,6 +12,10 @@ void BlobProcessor::run() {
 	//Frame oldest = cache.getRecent().second;
 
 	std::shared_ptr<Frame> frame = input_cache->get(0);
+
+	std::vector<int> blobs = { 1, 2, 3, 4 };
+	frame->addFeature("blobs", blobs);
+
 	output_cache->cache(frame);
 
 	//cv::Mat recent_mat, oldest_mat;
