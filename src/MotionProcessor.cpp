@@ -8,11 +8,24 @@
 
 void MotionProcessor::run() {
 	std::shared_ptr<Frame> frame = input_cache->get(0);
+	current_mat = frame->getData();
+	
+	if (first_frame) {
+		first_frame = false;
+		previous_mat = current_mat;
+	}
 
-	std::vector<int> blobs = boost::any_cast<std::vector<int>>(frame->getFeature("blobs"));
-	std::cout << blobs[0] << std::endl;
+	cv::Mat result_mat = current_mat;
 
+	//cv::absdiff(current_mat, previous_mat, result_mat);
+	//result_mat = cv::abs(current_mat - previous_mat);
+
+	cv::absdiff(previous_mat, current_mat, result_mat);
+
+	frame->addFeature("differential mat", result_mat.clone());
 	output_cache->cache(frame);
+
+	previous_mat = current_mat.clone();
 
 //	auto start = std::chrono::system_clock::now();
 	

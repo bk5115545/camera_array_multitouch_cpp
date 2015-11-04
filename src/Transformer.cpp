@@ -14,7 +14,7 @@ Transformer::~Transformer() {
 		delete input_cache;
 }
 
-int Transformer::addProcessor(Processor * p) {
+void Transformer::addProcessor(Processor * p) {
 	if (!processors.empty()) {
 		p->setCached(processors.back()->getOutputCache(), output_cache);
 		processors.push_back(p);
@@ -22,13 +22,10 @@ int Transformer::addProcessor(Processor * p) {
 		p->setCached(input_cache, output_cache);
 		processors.push_back(p);
 	}
-
-	return 0;
 }
 
-int Transformer::addFrame(std::shared_ptr<Frame> job) {
+void Transformer::addFrame(std::shared_ptr<Frame> job) {
 	input_cache->cache(job);
-	return 0;
 }
 
 int Transformer::processFrames() {

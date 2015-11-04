@@ -7,11 +7,11 @@ class MotionProcessor : public Processor {
 
 // Private members
 private:
-	cv::Mat f1;
-	cv::Mat f2;
-
 	bool first_frame = true;
 	
+	cv::Mat current_mat;
+	cv::Mat previous_mat;
+
 	void calculateMotionMask();
 
 	// Public methods

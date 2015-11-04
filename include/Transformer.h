@@ -21,13 +21,10 @@ public:
 	Transformer();
 	~Transformer();
 
-	int addProcessor(Processor * p);
-	int addFrame(std::shared_ptr<Frame> job);
+	void addProcessor(Processor * p);
+	void addFrame(std::shared_ptr<Frame> job);
 	
 	int processFrames();
 
 	std::shared_ptr<Frame> getResult();
-
-	//int removeProcessor();
-
 };

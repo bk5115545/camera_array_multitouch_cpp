@@ -8,23 +8,24 @@ BlobProcessor::~BlobProcessor() {
 
 
 void BlobProcessor::run() {
-	//Frame recent = cache.getRecent().first;
-	//Frame oldest = cache.getRecent().second;
+//	Frame recent = cache.getRecent().first;
+//	Frame oldest = cache.getRecent().second;
+
+//	std::vector<int> blobs = { 1, 2, 3, 4 };
 
 	std::shared_ptr<Frame> frame = input_cache->get(0);
+	cv::Mat differential_frame = boost::any_cast<cv::Mat>(frame->getFeature("differential mat"));
+	output_cache->cache(std::make_shared<Frame>(differential_frame, frame->getCameraID(), frame->getID()));
 
-	std::vector<int> blobs = { 1, 2, 3, 4 };
-	frame->addFeature("blobs", blobs);
+//	output_cache->cache(frame);
 
-	output_cache->cache(frame);
-
-	//cv::Mat recent_mat, oldest_mat;
+//	cv::Mat recent_mat, oldest_mat;
 
 //	cv::Mat current = frame->getData();
 	
 //	cv::Mat old_motion, recent_motion, result;
 
-	//we probably need a blur here on the input frame to reduce camera noise.
+//	we probably need a blur here on the input frame to reduce camera noise.
 //	cv::medianBlur(frame->getData(), frame->getData(),3);
 //	cv::absdiff(oldest_mat, current, old_motion);
 //	cv::absdiff(recent_mat, current, recent_motion);
@@ -34,8 +35,6 @@ void BlobProcessor::run() {
 	
 	
 	//return findBlob(result, frame);
-
-	return;
 }
 
 void BlobProcessor::setCached(FrameCache * input_cache, FrameCache * output_cache) {
