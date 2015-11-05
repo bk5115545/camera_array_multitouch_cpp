@@ -48,6 +48,9 @@
     <ClCompile Include="src\FeatureContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImageProc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
     <ClInclude Include="include\FrameCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ImageProc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

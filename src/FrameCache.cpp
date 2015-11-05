@@ -1,10 +1,6 @@
 
 #include "FrameCache.h"
 
-FrameCache::FrameCache() {
-
-}
-
 FrameCache::FrameCache(int max_size) {
 	_cache.max_size = max_size;
 }

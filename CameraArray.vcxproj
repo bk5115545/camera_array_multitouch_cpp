@@ -84,6 +84,7 @@
     <ClCompile Include="src\FeatureContainer.cpp" />
     <ClCompile Include="src\Frame.cpp" />
     <ClCompile Include="src\FrameCache.cpp" />
+    <ClCompile Include="src\ImageProc.cpp" />
     <ClCompile Include="src\MotionProcessor.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Transformer.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="include\FeatureContainer.h" />
     <ClInclude Include="include\Frame.h" />
     <ClInclude Include="include\FrameCache.h" />
+    <ClInclude Include="include\ImageProc.h" />
     <ClInclude Include="include\MotionProcessor.h" />
     <ClInclude Include="include\Processor.h" />
     <ClInclude Include="include\SharedConcurrentQueue.h" />

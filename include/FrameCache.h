@@ -10,7 +10,6 @@ private:
 	concurrent_queue<std::shared_ptr<Frame>> _cache;
 
 public:
-	FrameCache();
 	FrameCache(int max_size);
 
 	void cache(std::shared_ptr<Frame> f);
