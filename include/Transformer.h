@@ -2,10 +2,8 @@
 
 #include <vector>
 #include <thread>
-#include <memory>
 #include <atomic>
 
-#include "SharedConcurrentQueue.h"
 #include "Frame.h"
 #include "FrameCache.h"
 #include "Processor.h"
@@ -16,6 +14,7 @@ private:
 	FrameCache * output_cache;
 
 	std::vector<Processor *> processors;
+	std::vector<std::thread *> threads;
 
 public:
 	Transformer();
@@ -24,7 +23,5 @@ public:
 	void addProcessor(Processor * p);
 	void addFrame(std::shared_ptr<Frame> job);
 	
-	int processFrames();
-
 	std::shared_ptr<Frame> getResult();
 };

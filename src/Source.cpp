@@ -25,20 +25,18 @@ int main(int argv, char** argc) {
 
 	Transformer main_chain;
 
-	// main_chain.addProcessor(new ContourProcessor);
 	main_chain.addProcessor(new MotionProcessor());
 	main_chain.addProcessor(new BlobProcessor());
-	//main_chain.addProcessor(new MotionProcessor());
+	//main_chain.addProcessor(new MotionProcessor()); 
 
 	while (rendering) {
 		auto start = std::chrono::system_clock::now();
 
 		for (std::shared_ptr<CameraDevice> dev : devices) {
-			std::shared_ptr<Frame> frame = dev->getFrame();
-
-			main_chain.addFrame(frame);
-			main_chain.processFrames();
-			frame = main_chain.getResult();
+			main_chain.addFrame(dev->getFrame());
+			std::shared_ptr<Frame> frame = main_chain.getResult();
+			
+			//std::cout << "hello world" << std::endl;
 
 			if (frame.get() != nullptr) {
 				cv::imshow(dev->getName(), frame->getData());

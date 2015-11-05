@@ -1,22 +1,20 @@
-#include "BlobProcessor.h"
 
+#include "BlobProcessor.h"
 
 BlobProcessor::~BlobProcessor() {
 	if (input_cache) delete input_cache;
 	if (output_cache) delete output_cache;
 }
 
-
 void BlobProcessor::run() {
 //	Frame recent = cache.getRecent().first;
 //	Frame oldest = cache.getRecent().second;
-
 //	std::vector<int> blobs = { 1, 2, 3, 4 };
-
-	std::shared_ptr<Frame> frame = input_cache->get(0);
-	cv::Mat differential_frame = boost::any_cast<cv::Mat>(frame->getFeature("differential mat"));
-	output_cache->cache(std::make_shared<Frame>(differential_frame, frame->getCameraID(), frame->getID()));
-
+	while (true) {
+		std::shared_ptr<Frame> frame = input_cache->get(0);
+		//cv::Mat differential_frame = boost::any_cast<cv::Mat>(frame->getFeature("differential mat"));
+		output_cache->cache(frame);
+	}
 //	output_cache->cache(frame);
 
 //	cv::Mat recent_mat, oldest_mat;
@@ -34,12 +32,7 @@ void BlobProcessor::run() {
 //	cv::cvtColor(result, result, cv::COLOR_BGR2GRAY);
 	
 	
-	//return findBlob(result, frame);
-}
-
-void BlobProcessor::setCached(FrameCache * input_cache, FrameCache * output_cache) {
-	this->input_cache = input_cache;
-	this->output_cache = output_cache;
+//	return findBlob(result, frame);
 }
 
 std::shared_ptr<Frame> BlobProcessor::findBlob(cv::Mat diff, std::shared_ptr<Frame> color) {

@@ -1,12 +1,14 @@
 
 #include "MotionProcessor.h"
 
-#include <math.h>
-#include <chrono>
-#include <queue>
-#include <algorithm>
+#include <iostream>
 
 void MotionProcessor::run() {
+	while (true) {
+		std::shared_ptr<Frame> frame = input_cache->get(0);
+		output_cache->cache(frame);
+	}
+		/*
 	std::shared_ptr<Frame> frame = input_cache->get(0);
 	current_mat = frame->getData();
 	
@@ -20,13 +22,19 @@ void MotionProcessor::run() {
 	//cv::absdiff(current_mat, previous_mat, result_mat);
 	//result_mat = cv::abs(current_mat - previous_mat);
 
-	cv::absdiff(previous_mat, current_mat, result_mat);
+	//cv::absdiff(previous_mat, current_mat, result_mat);
+	
+	//ImageProc::absdiff(current_mat, previous_mat, result_mat);
+	
+	//cv::log(current_mat, result_mat);
 
-	frame->addFeature("differential mat", result_mat.clone());
+	//cv::max(current_mat, previous_mat, result_mat);
+
+	frame->addFeature("differential mat", result_mat);
 	output_cache->cache(frame);
 
-	previous_mat = current_mat.clone();
-
+	previous_mat = current_mat;
+*/
 //	auto start = std::chrono::system_clock::now();
 	
 //	cv::Mat temp = f->getData();
@@ -52,11 +60,6 @@ void MotionProcessor::run() {
 //	std::cout << duration << "\n";
 
 //	return std::make_shared<Frame>(out, f->getCameraID(), f->getID());
-}
-
-void MotionProcessor::setCached(FrameCache * input_cache, FrameCache * output_cache) {
-	this->input_cache = input_cache;
-	this->output_cache = output_cache;
 }
 
 void MotionProcessor::calculateMotionMask() {

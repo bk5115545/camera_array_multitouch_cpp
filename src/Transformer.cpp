@@ -12,30 +12,26 @@ Transformer::~Transformer() {
 
 	if (input_cache)
 		delete input_cache;
+
+	for (int i = 0; i < threads.size(); i++) {
+		threads[i]->join();
+	}
 }
 
 void Transformer::addProcessor(Processor * p) {
-	if (!processors.empty()) {
-		p->setCached(processors.back()->getOutputCache(), output_cache);
-		processors.push_back(p);
-	} else {
-		p->setCached(input_cache, output_cache);
-		processors.push_back(p);
-	}
+	if (!processors.empty())
+		p->setCache(processors.back()->getOutputCache(), output_cache);
+	else
+		p->setCache(input_cache, output_cache);
+
+	threads.push_back(new std::thread([=] { p->run(); }));
+	processors.push_back(p);
 }
 
 void Transformer::addFrame(std::shared_ptr<Frame> job) {
 	input_cache->cache(job);
 }
 
-int Transformer::processFrames() {
-	for (Processor * proc : processors) {
-		proc->run();
-	}
-
-	return 0;
-}
-
 std::shared_ptr<Frame> Transformer::getResult() {
-	return output_cache->get_nowait(0);
+	return output_cache->get(0);
 }

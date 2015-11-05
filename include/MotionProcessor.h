@@ -2,22 +2,22 @@
 #pragma once
 
 #include "Processor.h"
+#include "ImageProc.h"
 
 class MotionProcessor : public Processor {
 
 // Private members
-private:
-	bool first_frame = true;
+
+bool first_frame = true;
 	
-	cv::Mat current_mat;
-	cv::Mat previous_mat;
+cv::Mat current_mat;
+cv::Mat previous_mat;
 
-	void calculateMotionMask();
+void calculateMotionMask();
 
-	// Public methods
+// Public methods
 public:
 	void run();
-	void setCached(FrameCache * input_cache, FrameCache * output_cache);
 
 // Private methods
 private:
