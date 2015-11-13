@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <thread>
-#include <atomic>
 
 #include "Frame.h"
 #include "FrameCache.h"
@@ -14,7 +13,7 @@ private:
 	FrameCache * output_cache;
 
 	std::vector<Processor *> processors;
-	std::vector<std::thread *> threads;
+	std::vector<std::thread> threads;
 
 public:
 	Transformer();

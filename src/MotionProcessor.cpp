@@ -3,38 +3,42 @@
 
 #include <iostream>
 
-void MotionProcessor::run() {
-	while (true) {
+void MotionProcessor::computeFrame() {
+	cv::Mat current_mat = current_frame->getData();
+	cv::Mat result_mat = cv::Mat(current_mat.size(), current_mat.type());
+	
+	cv::bitwise_not(current_frame->getData(), result_mat);
+		
+	output_cache->cache(std::make_shared<Frame>(result_mat, current_frame->getCameraID(), current_frame->getID()));
+
+	/*
 		std::shared_ptr<Frame> frame = input_cache->get(0);
+		current_mat = frame->getData();
+	
+		if (first_frame) {
+			first_frame = false;
+			previous_mat = current_mat;
+		}
+
+		cv::Mat result_mat = current_mat;
+
+		//cv::absdiff(current_mat, previous_mat, result_mat);
+		//result_mat = cv::abs(current_mat - previous_mat);
+
+		//cv::absdiff(previous_mat, current_mat, result_mat);
+	
+		//ImageProc::absdiff(current_mat, previous_mat, result_mat);
+	
+		//cv::log(current_mat, result_mat);
+
+		//cv::max(current_mat, previous_mat, result_mat);
+
+		frame->addFeature("differential mat", result_mat);
 		output_cache->cache(frame);
-	}
-		/*
-	std::shared_ptr<Frame> frame = input_cache->get(0);
-	current_mat = frame->getData();
-	
-	if (first_frame) {
-		first_frame = false;
+
 		previous_mat = current_mat;
-	}
+	*/
 
-	cv::Mat result_mat = current_mat;
-
-	//cv::absdiff(current_mat, previous_mat, result_mat);
-	//result_mat = cv::abs(current_mat - previous_mat);
-
-	//cv::absdiff(previous_mat, current_mat, result_mat);
-	
-	//ImageProc::absdiff(current_mat, previous_mat, result_mat);
-	
-	//cv::log(current_mat, result_mat);
-
-	//cv::max(current_mat, previous_mat, result_mat);
-
-	frame->addFeature("differential mat", result_mat);
-	output_cache->cache(frame);
-
-	previous_mat = current_mat;
-*/
 //	auto start = std::chrono::system_clock::now();
 	
 //	cv::Mat temp = f->getData();

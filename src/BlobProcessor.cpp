@@ -1,11 +1,6 @@
 
 #include "BlobProcessor.h"
 
-BlobProcessor::~BlobProcessor() {
-	if (input_cache) delete input_cache;
-	if (output_cache) delete output_cache;
-}
-
 void BlobProcessor::run() {
 //	Frame recent = cache.getRecent().first;
 //	Frame oldest = cache.getRecent().second;

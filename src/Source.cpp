@@ -1,5 +1,4 @@
-#include <thread>
-#include <memory>
+
 #include <opencv2/opencv.hpp>
 
 #include "CameraDevice.h"
@@ -12,9 +11,10 @@
 
 int main(int argv, char** argc) {
 	bool rendering = true;
+
 	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
 
-	for(int i=0; i<8; i++) {
+	for(int i = 0; i < 8; i++) {
 		std::shared_ptr<CameraDevice> dev = std::make_shared<CameraDevice>(CameraDevice(i));
 		
 		if(dev->acquire()) {
@@ -26,30 +26,20 @@ int main(int argv, char** argc) {
 	Transformer main_chain;
 
 	main_chain.addProcessor(new MotionProcessor());
-	main_chain.addProcessor(new BlobProcessor());
-	//main_chain.addProcessor(new MotionProcessor()); 
+	//main_chain.addProcessor(new MotionProcessor());
 
 	while (rendering) {
-		auto start = std::chrono::system_clock::now();
-
 		for (std::shared_ptr<CameraDevice> dev : devices) {
-			main_chain.addFrame(dev->getFrame());
-			std::shared_ptr<Frame> frame = main_chain.getResult();
+			std::shared_ptr<Frame> frame = dev->getFrame();
 			
-			//std::cout << "hello world" << std::endl;
+			 main_chain.addFrame(frame);
+			 frame = main_chain.getResult();
 
-			if (frame.get() != nullptr) {
-				cv::imshow(dev->getName(), frame->getData());
-
-				if (cv::waitKey(2) >= 0)
-					rendering = false;
-			}
+			cv::imshow(dev->getName(), frame->getData());
 		}
 
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (
-			std::chrono::system_clock::now() - start).count();
-
-		std::cout << duration << "\n";
+		if (cv::waitKey(2) >= 0)
+			rendering = false;
 	}
 
 	return 0;
