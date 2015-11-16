@@ -35,5 +35,5 @@ void Transformer::addFrame(std::shared_ptr<Frame> frame) {
 }
 
 std::shared_ptr<Frame> Transformer::getResult() {
-	return output_cache->get(0);
+	return output_cache->pop();
 }
