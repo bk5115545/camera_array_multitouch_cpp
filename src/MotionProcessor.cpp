@@ -3,13 +3,21 @@
 
 #include <iostream>
 
-void MotionProcessor::computeFrame() {
+void MotionProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 	cv::Mat current_mat = current_frame->getData();
 	cv::Mat result_mat = cv::Mat(current_mat.size(), current_mat.type());
 	
-	cv::bitwise_not(current_frame->getData(), result_mat);
-		
+	if (first_frame) {
+		first_frame = false;
+		previous_mat = current_mat;
+	}
+
+	//cv::absdiff(current_mat, previous_mat, result_mat);
+
+	cv::bitwise_not(current_mat, result_mat);
 	output_cache->cache(std::make_shared<Frame>(result_mat, current_frame->getCameraID(), current_frame->getID()));
+
+	previous_mat = current_mat;
 
 	/*
 		std::shared_ptr<Frame> frame = input_cache->get(0);

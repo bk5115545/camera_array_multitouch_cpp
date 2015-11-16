@@ -15,5 +15,5 @@ private:
 	bool findRGBPoint(std::vector<cv::Point> point_list, cv::Point to_find);
 
 public:
-	void computeFrame();
+	void computeFrame(std::shared_ptr<Frame> current_frame);
 };
