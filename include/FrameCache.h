@@ -15,6 +15,8 @@ public:
 	void cache(std::shared_ptr<Frame> f);
 	void empty();
 
+	std::shared_ptr<Frame> pop();
+
 	std::shared_ptr<Frame> get(int index);
 	std::shared_ptr<Frame> get_nowait(int index);
 };

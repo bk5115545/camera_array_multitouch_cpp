@@ -8,10 +8,8 @@
 class Processor {
 
 protected:
-	std::shared_ptr<Frame> current_frame;
-
 	// Functions to implement
-	virtual void computeFrame() = 0;
+	virtual void computeFrame(std::shared_ptr<Frame> current_frame) = 0;
 
 private:
 	bool isRunning = true;
@@ -20,16 +18,13 @@ public:
 	FrameCache * input_cache;
 	FrameCache * output_cache;
 
-	virtual void run() {
+	void run() {
 		while (isRunning) {
-			current_frame = input_cache->get(0);
-
-			if (current_frame->getCameraID() > -1)
-				computeFrame();
+			computeFrame(input_cache->pop());
 		}
 	}
 	
-	virtual void stop() {
+	void stop() {
 		isRunning = false;
 	}
 };
