@@ -17,26 +17,25 @@ std::shared_ptr<Frame> FrameCache::pop() {
 	std::shared_ptr<Frame> f;
 
 	_cache.wait_until_not_empty();
+	_cache.try_pop(f);
 
-	if (_cache.try_pop(f))
-		return f;
-	else
-		return std::make_shared<Frame>(Frame());
+	return f;
 }
 
 std::shared_ptr<Frame> FrameCache::get(int index) {
 	std::shared_ptr<Frame> f;
 	
 	_cache.wait_until_not_empty();
-
-	if (_cache.peek(index, f))
-		return f;
-	else
-		return std::make_shared<Frame>(Frame());
+	_cache.peek(index, f);
+	
+	return f;
 }
 
 std::shared_ptr<Frame> FrameCache::get_nowait(int index) {
 	std::shared_ptr<Frame> f;
-	return _cache.peek(index, f) ? f : std::make_shared<Frame>(Frame());
+	
+	_cache.peek(index, f);
+
+	return f;
 }
 
