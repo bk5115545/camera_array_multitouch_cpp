@@ -11,5 +11,5 @@ private:
 	cv::Mat previous_mat;
 
 public:
-	void computeFrame(std::shared_ptr<Frame> current_frame);
+	std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame);
 };

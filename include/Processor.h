@@ -9,7 +9,7 @@ class Processor {
 
 protected:
 	// Functions to implement
-	virtual void computeFrame(std::shared_ptr<Frame> current_frame) = 0;
+	virtual std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame) = 0;
 
 private:
 	bool isRunning = true;
@@ -20,7 +20,7 @@ public:
 
 	void run() {
 		while (isRunning) {
-			computeFrame(input_cache->pop());
+			output_cache->push(computeFrame(input_cache->pop()));
 		}
 	}
 	

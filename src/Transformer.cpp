@@ -31,7 +31,7 @@ void Transformer::addProcessor(Processor * p) {
 }
 
 void Transformer::addFrame(std::shared_ptr<Frame> frame) {
-	input_cache->cache(frame);
+	input_cache->push(frame);
 }
 
 std::shared_ptr<Frame> Transformer::getResult() {

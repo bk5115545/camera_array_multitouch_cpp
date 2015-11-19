@@ -7,7 +7,7 @@
 	result in the feature container labeled "diff"
 */
 
-void MotionProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
+std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 	cv::Mat current_mat = current_frame->getData();
 	
 	if (first_frame) {
@@ -23,6 +23,7 @@ void MotionProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 
 	current_frame->addFeature("diff", diff_mat);
 
-	output_cache->cache(current_frame);
 	previous_mat = current_mat;
+
+	return current_frame;
 }

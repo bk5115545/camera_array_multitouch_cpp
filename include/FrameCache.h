@@ -12,10 +12,10 @@ private:
 public:
 	FrameCache(int max_size);
 
-	void cache(std::shared_ptr<Frame> f);
 	void empty();
 
 	std::shared_ptr<Frame> pop();
+	void push(std::shared_ptr<Frame> f);
 
 	std::shared_ptr<Frame> get(int index);
 	std::shared_ptr<Frame> get_nowait(int index);

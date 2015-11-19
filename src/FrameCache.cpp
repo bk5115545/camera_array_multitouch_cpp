@@ -5,7 +5,7 @@ FrameCache::FrameCache(int max_size) {
 	_cache.max_size = max_size;
 }
 
-void FrameCache::cache(std::shared_ptr<Frame> f) {
+void FrameCache::push(std::shared_ptr<Frame> f) {
 	_cache.push(f);
 }
 

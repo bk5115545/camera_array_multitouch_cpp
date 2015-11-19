@@ -11,8 +11,7 @@ private:
 
 
 public:
-	ContourProcessor();
-	std::shared_ptr<Frame> run(std::shared_ptr<Frame> f);
+	std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame);
 
 	void setTrackingID(int id,cv::Point hsl_low,cv::Point hsl_high);
 };

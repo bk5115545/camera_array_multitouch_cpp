@@ -1,14 +1,16 @@
 
 #include "BlobProcessor.h"
 
-void BlobProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
+std::shared_ptr<Frame> BlobProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 //	Frame recent = cache.getRecent().first;
 //	Frame oldest = cache.getRecent().second;
 //	std::vector<int> blobs = { 1, 2, 3, 4 };
 	
 	cv::Mat inverse_mat = boost::any_cast<cv::Mat>(current_frame->getFeature("diff"));
+	cv::bitwise_not(inverse_mat, inverse_mat);
+	current_frame->addFeature("diff", inverse_mat);
 
-	output_cache->cache(std::make_shared<Frame>(inverse_mat, current_frame->getCameraID(), current_frame->getID()));
+	return std::make_shared<Frame>(inverse_mat, current_frame->getCameraID(), current_frame->getID());
 
 //	output_cache->cache(frame);
 

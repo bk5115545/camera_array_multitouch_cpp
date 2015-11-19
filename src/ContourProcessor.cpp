@@ -1,11 +1,8 @@
 #include "ContourProcessor.h"
-#include <opencv2\opencv.hpp>
-#include "Frame.h"
 
-ContourProcessor::ContourProcessor() {}
 
-std::shared_ptr<Frame> ContourProcessor::run(std::shared_ptr<Frame> f) {
-	cv::Mat frame = f->getData();
+std::shared_ptr<Frame> ContourProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
+	cv::Mat frame = current_frame->getData();
 
 	cv::vector<cv::vector<cv::Point>> contours;
 	cvtColor(frame,frame,CV_BGR2HSV);
@@ -53,9 +50,10 @@ std::shared_ptr<Frame> ContourProcessor::run(std::shared_ptr<Frame> f) {
 			cv::drawContours(interestingContour,interestingContours,-1,cv::Scalar(255,0,255),2,8);
 		}
 
-		return std::make_shared<Frame>(Frame(interestingContour,f->getCameraID(),f->getID()));
+		return std::make_shared<Frame>(Frame(interestingContour, current_frame->getCameraID(), current_frame->getID()));
 	}
-	return std::shared_ptr<Frame>(nullptr);
+
+	return current_frame;
 }
 
 void ContourProcessor::setTrackingID(int id,cv::Point hsl_low,cv::Point hsl_high) {
