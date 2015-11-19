@@ -72,7 +72,7 @@ template<typename Data> class concurrent_queue {
 			return false;
 		}
 
-		void wait_and_pop(Data& popped_value) {
+		void wait_and_pop(Data & popped_value) {
 			boost::mutex::scoped_lock lock(queue_mutex);
 			while(current_size == 0) {
 				condition.wait(lock); //unlocks and waits.  re-locks on return
