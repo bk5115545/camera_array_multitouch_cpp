@@ -39,6 +39,10 @@ Feature Frame::getFeature(std::string ID) {
 	return features.get(ID);
 }
 
+bool Frame::checkFeature(std::string ID) {
+	return features.check(ID);
+}
+
 bool Frame::operator==(Frame f1) {
 	if (f1.getID() == _frame_id) {
 		return true;

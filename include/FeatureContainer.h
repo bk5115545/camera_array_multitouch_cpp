@@ -17,5 +17,6 @@ private:
 public:
 	void set(std::string ID, Feature feature);
 	Feature get(std::string ID);
+	bool check(std::string ID);
 };
 

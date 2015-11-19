@@ -12,3 +12,13 @@ Feature FeatureContainer::get(std::string ID) {
 		return NULL;
 	}
 }
+
+bool FeatureContainer::check(std::string ID) {
+	try {
+		features.at(ID);
+		return true;
+	}
+	catch (std::out_of_range e) {
+		return false;
+	}
+}
