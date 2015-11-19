@@ -12,5 +12,5 @@ private:
 	std::shared_ptr<Frame> findBlob(cv::Mat diff, std::shared_ptr<Frame> color);
 
 public:
-	void run();
+	void computeFrame(std::shared_ptr<Frame> current_frame);
 };
