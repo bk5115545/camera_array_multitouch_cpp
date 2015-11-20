@@ -12,9 +12,7 @@ Transformer::~Transformer() {
 	if (input_cache)
 		delete input_cache;
 
-	for (int i = 0; i < processors.size(); i++) {
-		processors[i]->stop();
-	}
+	stopProcessors();
 }
 
 void Transformer::addProcessor(Processor * p) {
@@ -32,6 +30,12 @@ void Transformer::addProcessor(Processor * p) {
 
 void Transformer::addFrame(std::shared_ptr<Frame> frame) {
 	input_cache->push(frame);
+}
+
+void Transformer::stopProcessors() {
+	for (int i = 0; i < processors.size(); i++) {
+		processors[i]->stop();
+	}
 }
 
 std::shared_ptr<Frame> Transformer::getResult() {
