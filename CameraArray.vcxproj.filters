@@ -51,6 +51,9 @@
     <ClCompile Include="src\ImageProc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\src\HistoricMotionProcessor.cpp">
+      <Filter>Source Files\Processors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="include\ImageProc.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HistoricMotionProcessor.h">
+      <Filter>Header Files\Processors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

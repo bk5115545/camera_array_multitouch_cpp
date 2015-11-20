@@ -6,10 +6,12 @@
 #include "Frame.h"
 
 #include "MotionProcessor.h"
+#include "HistoricMotionProcessor.h"
+
 #include "BlobProcessor.h"
 #include "ContourProcessor.h"
 
-int main(int argv, char** argc) {
+int main(int argv, char ** argc) {
 	bool rendering = true;
 
 	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
@@ -26,8 +28,8 @@ int main(int argv, char** argc) {
 	Transformer main_chain;
 
 	main_chain.addProcessor(new MotionProcessor());
-	main_chain.addProcessor(new BlobProcessor());
-	//main_chain.addProcessor(new MotionProcessor());
+	main_chain.addProcessor(new HistoricMotionProcessor());
+	//main_chain.addProcessor(new ContourProcessor());
 
 	while (rendering) {
 		for (std::shared_ptr<CameraDevice> dev : devices) {
@@ -42,6 +44,8 @@ int main(int argv, char** argc) {
 		if (cv::waitKey(2) >= 0)
 			rendering = false;
 	}
+
+	main_chain.stopProcessors();
 
 	return 0;
 }
