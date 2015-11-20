@@ -8,13 +8,25 @@
 */
 
 std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
-	cv::Mat current_mat = current_frame->getData();
+	current_mat = current_frame->getData();
 	
 	if (first_frame) {
 		first_frame = false;
 		previous_mat = current_mat;
 	}
 
+	cv::Mat mask = calculateMotionMask(current_frame);
+
+	cv::Mat nonZeroLocs;
+	cv::findNonZero(mask, nonZeroLocs);
+	current_frame->addFeature("motion_locs", nonZeroLocs);
+
+	previous_mat = current_mat;
+
+	return current_frame;
+}
+
+cv::Mat MotionProcessor::calculateMotionMask(std::shared_ptr<Frame> current_frame) {
 	cv::Mat diff_mat = cv::Mat(current_mat.size(), current_mat.type());
 
 	cv::absdiff(current_mat, previous_mat, diff_mat);
@@ -23,7 +35,10 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 
 	current_frame->addFeature("diff", diff_mat);
 
-	previous_mat = current_mat;
+	cv::Mat motion_mask = cv::Mat(current_mat.size(), current_mat.type());
+	cv::inRange(diff_mat, cv::Scalar(10, 10, 10), cv::Scalar(255, 255, 255), motion_mask);
 
-	return current_frame;
+	current_frame->addFeature("motion_mask", motion_mask);
+
+	return motion_mask;
 }
