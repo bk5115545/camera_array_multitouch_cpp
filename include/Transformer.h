@@ -22,5 +22,7 @@ public:
 	void addProcessor(Processor * p);
 	void addFrame(std::shared_ptr<Frame> job);
 	
+	void stopProcessors();
+
 	std::shared_ptr<Frame> getResult();
 };
