@@ -1,12 +1,15 @@
 
 #pragma once
 
-#include <opencv2/opencv.hpp>
 #include <string>
 #include <memory>
 #include <chrono>
 
-#include "FeatureContainer.h"
+#include <boost/any.hpp>
+#include <opencv2/opencv.hpp>
+
+// use boost::any_cast to cast the feature
+typedef boost::any Feature;
 
 class Frame : public std::enable_shared_from_this<Frame> {
 	private:
@@ -14,7 +17,7 @@ class Frame : public std::enable_shared_from_this<Frame> {
 		int _camera_id;
 		unsigned long long _frame_id;
 
-		FeatureContainer features;
+		std::map<std::string, Feature> features;
 
 	public:
 		Frame();
@@ -27,9 +30,8 @@ class Frame : public std::enable_shared_from_this<Frame> {
 
 		void addFeature(std::string ID, Feature feature);
 		Feature getFeature(std::string ID);
+		void removeFeature(std::string ID);
 		bool checkFeature(std::string ID);
-
-		operator cv::Mat() const;
 
 		bool operator == (Frame f1);
 };

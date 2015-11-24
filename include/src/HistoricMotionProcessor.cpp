@@ -25,7 +25,7 @@ std::shared_ptr<Frame> HistoricMotionProcessor::computeFrame(std::shared_ptr<Fra
 		color_mm.at<cv::Vec3b>(loc_i) = current_mat.at<cv::Vec3b>(loc_i);
 	}
 
-	//return std::make_shared<Frame>(color_mm, current_frame->getCameraID(), current_frame->getID());
+	return std::make_shared<Frame>(color_mm, current_frame->getCameraID(), current_frame->getID());
 
 	if (first_frame) {
 		first_frame = false;
@@ -36,18 +36,18 @@ std::shared_ptr<Frame> HistoricMotionProcessor::computeFrame(std::shared_ptr<Fra
 		Blue - Previous Location
 	*/
 	for (int i = 0; i < previous_locs.rows; i++) {
-		cv::Point loc_i = previous_locs.at<cv::Point>(i);
-		blank_mat.at<cv::Vec3b>(loc_i) = cv::Vec3b(255, 0, 0);
-	}
-	
-	/*
-		Green - Current Location
-	*/
-	for (int i = 0; i < motion_locations.rows; i++) {
-		cv::Point loc_i = motion_locations.at<cv::Point>(i);
-		blank_mat.at<cv::Vec3b>(loc_i) = cv::Vec3b(0, 255, 0);
+		cv::Point p_loc = previous_locs.at<cv::Point>(i);
+
+		blank_mat.at<cv::Vec3b>(p_loc) = cv::Vec3b(255, 0, 0);
 	}
 
+	for (int i = 0; i < motion_locations.rows; i++) {
+		cv::Point c_loc = motion_locations.at<cv::Point>(i);
+
+		blank_mat.at<cv::Vec3b>(c_loc) = cv::Vec3b(0, 255, 0);
+
+	}
+	
 	previous_locs = motion_locations;
 
 	//return current_frame;

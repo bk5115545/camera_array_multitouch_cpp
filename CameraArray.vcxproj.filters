@@ -45,9 +45,6 @@
     <ClCompile Include="src\FrameCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FeatureContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ImageProc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\SharedConcurrentQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FeatureContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BlobProcessor.h">

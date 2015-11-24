@@ -23,6 +23,7 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 
 	previous_mat = current_mat;
 
+	//return std::make_shared<Frame>(boost::any_cast<cv::Mat>(current_frame->getFeature("diff")), current_frame->getCameraID(), current_frame->getID());
 	return current_frame;
 }
 
@@ -36,7 +37,7 @@ cv::Mat MotionProcessor::calculateMotionMask(std::shared_ptr<Frame> current_fram
 	current_frame->addFeature("diff", diff_mat);
 
 	cv::Mat motion_mask = cv::Mat(current_mat.size(), current_mat.type());
-	cv::inRange(diff_mat, cv::Scalar(10, 10, 10), cv::Scalar(255, 255, 255), motion_mask);
+	cv::inRange(diff_mat, cv::Scalar(1, 1, 1), cv::Scalar(255, 255, 255), motion_mask);
 
 	current_frame->addFeature("motion_mask", motion_mask);
 

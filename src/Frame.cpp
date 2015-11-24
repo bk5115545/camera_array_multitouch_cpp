@@ -31,22 +31,44 @@ unsigned long long Frame::getID() {
 	return _frame_id;
 }
 
+/*
+	Feature Management
+*/
+
 void Frame::addFeature(std::string ID, Feature feature) {
-	features.set(ID, feature);
+	features[ID] = feature;
 }
 
 Feature Frame::getFeature(std::string ID) {
-	return features.get(ID);
+	try {
+		return features.at(ID);
+	}
+	catch (std::out_of_range e) {
+		return NULL;
+	}
+}
+
+void Frame::removeFeature(std::string ID) {
+	features.erase(ID);
 }
 
 bool Frame::checkFeature(std::string ID) {
-	return features.check(ID);
-}
-
-bool Frame::operator==(Frame f1) {
-	if (f1.getID() == _frame_id) {
+	try {
+		features.at(ID);
 		return true;
 	}
+	catch (std::out_of_range e) {
+		return false;
+	}
+}
+
+/*
+	Overidden Operators
+*/
+
+bool Frame::operator==(Frame f1) {
+	if (f1.getID() == _frame_id) 
+		return true;
 
 	return false;
 }
