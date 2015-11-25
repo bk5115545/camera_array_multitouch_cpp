@@ -32,6 +32,8 @@ cv::Mat MotionProcessor::calculateMotionMask(std::shared_ptr<Frame> current_fram
 
 	cv::absdiff(current_mat, previous_mat, diff_mat);
 	cv::erode(diff_mat, diff_mat, cv::Mat(5, 5, CV_8UC1), cv::Point(0, 0));
+	
+	// TODO do in full color
 	cv::bitwise_and(current_mat, diff_mat, diff_mat);
 
 	current_frame->addFeature("diff", diff_mat);

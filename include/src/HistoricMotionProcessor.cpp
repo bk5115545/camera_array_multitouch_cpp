@@ -1,6 +1,8 @@
 
 #include "HistoricMotionProcessor.h"
 
+#include <iostream>
+
 /*
 	HistoricMotionProcessor is responsible
 	for deterimining motion over time whereas 
@@ -20,36 +22,22 @@ std::shared_ptr<Frame> HistoricMotionProcessor::computeFrame(std::shared_ptr<Fra
 
 	cv::Mat color_mm = cv::Mat(current_mat.size(), current_mat.type());
 
+	cv::Vec3b avg_color;
+
 	for (int i = 0; i < motion_locations.rows; i++) {
 		cv::Point loc_i = motion_locations.at<cv::Point>(i);
-		color_mm.at<cv::Vec3b>(loc_i) = current_mat.at<cv::Vec3b>(loc_i);
+		cv::Vec3b loc_color = current_mat.at<cv::Vec3b>(loc_i);
+
+		color_mm.at<cv::Vec3b>(loc_i) = loc_color;
+		
+		for (int j = 0; j < 3; j++)
+			avg_color[j] += loc_color[j];
 	}
+
+	std::cout << (int) avg_color[0] << " " << (int) avg_color[1] << " " << (int) avg_color[2] << std::endl;
+
+	current_frame->addFeature("color motion_mask", color_mm);
 
 	return std::make_shared<Frame>(color_mm, current_frame->getCameraID(), current_frame->getID());
-
-	if (first_frame) {
-		first_frame = false;
-		previous_locs = motion_locations;
-	}
-
-	/*
-		Blue - Previous Location
-	*/
-	for (int i = 0; i < previous_locs.rows; i++) {
-		cv::Point p_loc = previous_locs.at<cv::Point>(i);
-
-		blank_mat.at<cv::Vec3b>(p_loc) = cv::Vec3b(255, 0, 0);
-	}
-
-	for (int i = 0; i < motion_locations.rows; i++) {
-		cv::Point c_loc = motion_locations.at<cv::Point>(i);
-
-		blank_mat.at<cv::Vec3b>(c_loc) = cv::Vec3b(0, 255, 0);
-
-	}
-	
-	previous_locs = motion_locations;
-
-	//return current_frame;
-	return std::make_shared<Frame>(blank_mat, current_frame->getCameraID(), current_frame->getID());
+	return current_frame;
 }

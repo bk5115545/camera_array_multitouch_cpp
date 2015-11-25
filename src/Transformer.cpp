@@ -2,7 +2,7 @@
 #include "Transformer.h"
 
 Transformer::Transformer() {
-	input_cache = new FrameCache(2);
+	input_cache = new FrameCache(100);
 }
 
 Transformer::~Transformer() {
@@ -21,7 +21,7 @@ void Transformer::addProcessor(Processor * p) {
 	else
 		p->input_cache = input_cache;
 
-	output_cache = new FrameCache(2);
+	output_cache = new FrameCache(100);
 	p->output_cache = output_cache;
 
 	threads.push_back(std::thread([=] { p->run(); }));
