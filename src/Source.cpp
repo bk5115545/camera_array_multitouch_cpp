@@ -7,9 +7,8 @@
 
 #include "MotionProcessor.h"
 #include "HistoricMotionProcessor.h"
-
-#include "BlobProcessor.h"
 #include "ContourProcessor.h"
+#include "ClusterProcessor.h"
 
 int main(int argv, char ** argc) {
 	bool rendering = true;
@@ -28,7 +27,8 @@ int main(int argv, char ** argc) {
 	Transformer main_chain;
 
 	main_chain.addProcessor(new MotionProcessor());
-	main_chain.addProcessor(new HistoricMotionProcessor());
+	main_chain.addProcessor(new ClusterProcessor());
+	
 	//main_chain.addProcessor(new ContourProcessor());
 
 	while (rendering) {

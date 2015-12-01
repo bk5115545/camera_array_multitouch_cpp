@@ -15,33 +15,27 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 		previous_mat = current_mat;
 	}
 
-	cv::Mat mask = calculateMotionMask(current_frame);
-
-	cv::Mat nonZeroLocs;
-	cv::findNonZero(mask, nonZeroLocs);
-	current_frame->addFeature("motion_locs", nonZeroLocs);
-
-	previous_mat = current_mat;
-
-	//return std::make_shared<Frame>(boost::any_cast<cv::Mat>(current_frame->getFeature("diff")), current_frame->getCameraID(), current_frame->getID());
-	return current_frame;
-}
-
-cv::Mat MotionProcessor::calculateMotionMask(std::shared_ptr<Frame> current_frame) {
+	// Calculate absolute difference
 	cv::Mat diff_mat = cv::Mat(current_mat.size(), current_mat.type());
-
+	
 	cv::absdiff(current_mat, previous_mat, diff_mat);
 	cv::erode(diff_mat, diff_mat, cv::Mat(5, 5, CV_8UC1), cv::Point(0, 0));
-	
-	// TODO do in full color
-	cv::bitwise_and(current_mat, diff_mat, diff_mat);
+	cv::bitwise_and(current_mat, diff_mat, diff_mat);	// TODO do in full color
 
 	current_frame->addFeature("diff", diff_mat);
 
+	// Calculate motion mask
 	cv::Mat motion_mask = cv::Mat(current_mat.size(), current_mat.type());
 	cv::inRange(diff_mat, cv::Scalar(1, 1, 1), cv::Scalar(255, 255, 255), motion_mask);
-
 	current_frame->addFeature("motion_mask", motion_mask);
 
-	return motion_mask;
+	// Calculate non zero locations
+	cv::Mat nonZeroLocs;
+	cv::findNonZero(motion_mask, nonZeroLocs);	
+	current_frame->addFeature("motion_locs", nonZeroLocs);
+
+	// update previous frame
+	previous_mat = current_mat;
+
+	return current_frame;
 }

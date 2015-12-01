@@ -82,6 +82,7 @@
     <ClCompile Include="include\src\HistoricMotionProcessor.cpp" />
     <ClCompile Include="src\BlobProcessor.cpp" />
     <ClCompile Include="src\CameraDevice.cpp" />
+    <ClCompile Include="src\ClusterProcessor.cpp" />
     <ClCompile Include="src\ContourProcessor.cpp" />
     <ClCompile Include="src\Frame.cpp" />
     <ClCompile Include="src\FrameCache.cpp" />
@@ -93,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="include\BlobProcessor.h" />
     <ClInclude Include="include\CameraDevice.h" />
+    <ClInclude Include="include\ClusterProcessor.h" />
     <ClInclude Include="include\ContourProcessor.h" />
     <ClInclude Include="include\Frame.h" />
     <ClInclude Include="include\FrameCache.h" />
