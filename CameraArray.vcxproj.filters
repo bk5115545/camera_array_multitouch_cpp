@@ -54,6 +54,9 @@
     <ClCompile Include="src\ClusterProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
+    <ClCompile Include="src\ClusterColorizerProcessor.cpp">
+      <Filter>Source Files\Processors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
     <ClInclude Include="include\ClusterProcessor.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ClusterColorizerProcessor.h">
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@
 #include "HistoricMotionProcessor.h"
 #include "ContourProcessor.h"
 #include "ClusterProcessor.h"
+#include "ClusterColorizerProcessor.h"
 
 int main(int argv, char ** argc) {
 	bool rendering = true;
@@ -28,8 +29,7 @@ int main(int argv, char ** argc) {
 
 	main_chain.addProcessor(new MotionProcessor());
 	main_chain.addProcessor(new ClusterProcessor());
-	
-	//main_chain.addProcessor(new ContourProcessor());
+	main_chain.addProcessor(new ClusterColorizerProcessor());
 
 	while (rendering) {
 		for (std::shared_ptr<CameraDevice> dev : devices) {

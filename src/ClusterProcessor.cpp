@@ -31,6 +31,8 @@ std::shared_ptr<Frame> ClusterProcessor::computeFrame(std::shared_ptr<Frame> cur
 		}
 	}
 
+	current_frame->addFeature("clusters", clusters);
+	
 	return current_frame;
 }
 
