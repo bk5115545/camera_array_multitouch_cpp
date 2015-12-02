@@ -13,6 +13,8 @@ class ClusterProcessor : public Processor {
 
 private:
 	cv::Mat motion_locations;
+	cv::Mat motion_mat;
+
 	int n_motion;
 
 	Cluster visited_points;

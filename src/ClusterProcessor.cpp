@@ -11,6 +11,7 @@
 std::shared_ptr<Frame> ClusterProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 	std::vector<Cluster> clusters;
 
+	motion_mat = boost::any_cast<cv::Mat>(current_frame->getFeature("motion_mask"));
 	motion_locations = boost::any_cast<cv::Mat>(current_frame->getFeature("motion_locs"));
 	n_motion = motion_locations.rows;
 
@@ -67,13 +68,16 @@ Cluster ClusterProcessor::getRegion(cv::Point loc) {
 	float max_x = loc.x + (maxDist / 2);
 	float max_y = loc.y + (maxDist / 2);
 
-	cv::Rect bounding_search_box (cv::Point(min_x, min_y), cv::Point(max_x, max_y));
+	cv::Rect bounding_rect (cv::Point(), motion_mat.size());
 
-	for (int i = 0; i < n_motion; i++) {
-		cv::Point current_point = motion_locations.at<cv::Point>(i);
-
-		if (bounding_search_box.contains(current_point))
-			neighbors.push_back(current_point);
+	for (int i = min_x; i < max_x; i++) {
+		for (int j = min_y; j < max_y; j++) {
+			cv::Point current_point (i, j);
+	
+			if (bounding_rect.contains(current_point))
+				if (motion_mat.at<uchar>(current_point) == 255)
+					neighbors.push_back(current_point);
+		}
 	}
 
 	return neighbors;

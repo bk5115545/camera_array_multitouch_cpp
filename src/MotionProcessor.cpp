@@ -37,5 +37,6 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 	// update previous frame
 	previous_mat = current_mat;
 
+	//return std::make_shared<Frame>(motion_mask, current_frame->getCameraID(), current_frame->getID());
 	return current_frame;
 }
