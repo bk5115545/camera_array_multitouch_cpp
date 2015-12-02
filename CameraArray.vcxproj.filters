@@ -51,10 +51,10 @@
     <ClCompile Include="include\src\HistoricMotionProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
-    <ClCompile Include="src\ClusterProcessor.cpp">
+    <ClCompile Include="src\ClusterColorizerProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
-    <ClCompile Include="src\ClusterColorizerProcessor.cpp">
+    <ClCompile Include="src\DBScanProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,10 +92,10 @@
     <ClInclude Include="include\HistoricMotionProcessor.h">
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
-    <ClInclude Include="include\ClusterProcessor.h">
+    <ClInclude Include="include\ClusterColorizerProcessor.h">
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
-    <ClInclude Include="include\ClusterColorizerProcessor.h">
+    <ClInclude Include="include\DBScanProcessor.h">
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
   </ItemGroup>

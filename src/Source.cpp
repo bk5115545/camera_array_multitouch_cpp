@@ -8,7 +8,7 @@
 #include "MotionProcessor.h"
 #include "HistoricMotionProcessor.h"
 #include "ContourProcessor.h"
-#include "ClusterProcessor.h"
+#include "DBScanProcessor.h"
 #include "ClusterColorizerProcessor.h"
 
 int main(int argv, char ** argc) {
@@ -28,7 +28,7 @@ int main(int argv, char ** argc) {
 	Transformer main_chain;
 
 	main_chain.addProcessor(new MotionProcessor());
-	main_chain.addProcessor(new ClusterProcessor());
+	main_chain.addProcessor(new DBScanProcessor());
 	main_chain.addProcessor(new ClusterColorizerProcessor());
 
 	while (rendering) {

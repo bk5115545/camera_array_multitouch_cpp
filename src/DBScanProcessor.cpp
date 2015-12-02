@@ -1,14 +1,14 @@
 
-#include "ClusterProcessor.h"
+#include "DBScanProcessor.h"
 
 /*
-	ClusterProcessor generates a list of clusters (list) based on density of the movement
+	DBScanProcessor generates a list of clusters (list) based on density of the movement
 	points. This is important for object / user segmentation. ClusterProcessor currently 
 	implements the DBSCAN algorithm for cluster analysis which incorporates the concept of 
 	k nearest neighbors
 */
 
-std::shared_ptr<Frame> ClusterProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
+std::shared_ptr<Frame> DBScanProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 	std::vector<Cluster> clusters;
 
 	motion_mat = boost::any_cast<cv::Mat>(current_frame->getFeature("motion_mask"));
@@ -25,23 +25,23 @@ std::shared_ptr<Frame> ClusterProcessor::computeFrame(std::shared_ptr<Frame> cur
 
 		Cluster neighbors = getRegion(current_point);
 
-		if (neighbors.size() < minPoints)
-			noise.push_back(current_point);
-		else {
+		if (neighbors.size() >= minPoints)
 			clusters.push_back(expandCluster(current_point, neighbors));
-		}
 	}
 
 	current_frame->addFeature("clusters", clusters);
 	
+	//visited_points.empty();
+	//clustered_points.empty();
+
 	return current_frame;
 }
 
-float ClusterProcessor::getDistanceBetween(cv::Point c_loc, cv::Point p_loc) {
+float DBScanProcessor::getDistanceBetween(cv::Point c_loc, cv::Point p_loc) {
 	return sqrt(pow(abs(p_loc.x - c_loc.x), 2) + pow(abs(p_loc.y - c_loc.y), 2));
 }
 
-bool ClusterProcessor::findPointInList(Cluster list, cv::Point p) {
+bool DBScanProcessor::findPointInList(Cluster list, cv::Point p) {
 	auto iter = std::find_if(list.begin(), list.end(),
 		[p] (cv::Point p2) -> bool {
 			if ((p.x == p2.x) & (p.y == p2.y))
@@ -57,7 +57,7 @@ bool ClusterProcessor::findPointInList(Cluster list, cv::Point p) {
 /*
 	dist = side length of square
 */
-Cluster ClusterProcessor::getRegion(cv::Point loc) {
+Cluster DBScanProcessor::getRegion(cv::Point loc) {
 	Cluster neighbors; 
 
 	neighbors.push_back(loc);
@@ -83,7 +83,7 @@ Cluster ClusterProcessor::getRegion(cv::Point loc) {
 	return neighbors;
 }
 
-Cluster ClusterProcessor::expandCluster(cv::Point loc, Cluster loc_neighbors) {
+Cluster DBScanProcessor::expandCluster(cv::Point loc, Cluster loc_neighbors) {
 	Cluster current = loc_neighbors;
 
 	current.push_back(loc);
@@ -97,7 +97,7 @@ Cluster ClusterProcessor::expandCluster(cv::Point loc, Cluster loc_neighbors) {
 			Cluster p_neighbors = getRegion(p);
 
 			if (p_neighbors.size() >= minPoints) {
-				// append the cluster to the current
+				// append the neighbors to the current cluster
 				current.insert(current.end(), p_neighbors.begin(), p_neighbors.end());
 			}
 		}

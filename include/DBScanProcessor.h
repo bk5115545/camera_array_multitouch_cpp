@@ -9,7 +9,7 @@
 
 typedef std::vector<cv::Point> Cluster;
 
-class ClusterProcessor : public Processor {
+class DBScanProcessor : public Processor {
 
 private:
 	cv::Mat motion_locations;
@@ -19,7 +19,6 @@ private:
 
 	Cluster visited_points;
 	Cluster clustered_points;
-	Cluster noise;
 
 	// DBSCAN Parameters
 	int minPoints = 3;	// Note should be at least >= 2
