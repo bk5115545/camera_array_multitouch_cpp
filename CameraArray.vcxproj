@@ -83,6 +83,7 @@
     <ClCompile Include="src\BlobProcessor.cpp" />
     <ClCompile Include="src\CameraDevice.cpp" />
     <ClCompile Include="src\ClusterColorizerProcessor.cpp" />
+    <ClCompile Include="src\DBPoint.cpp" />
     <ClCompile Include="src\DBScanProcessor.cpp" />
     <ClCompile Include="src\ContourProcessor.cpp" />
     <ClCompile Include="src\Frame.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="include\BlobProcessor.h" />
     <ClInclude Include="include\CameraDevice.h" />
     <ClInclude Include="include\ClusterColorizerProcessor.h" />
+    <ClInclude Include="include\DBPoint.h" />
     <ClInclude Include="include\DBScanProcessor.h" />
     <ClInclude Include="include\ContourProcessor.h" />
     <ClInclude Include="include\Frame.h" />

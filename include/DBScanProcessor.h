@@ -4,10 +4,12 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 #include "Processor.h"
+#include "DBPoint.h"
 
-typedef std::vector<cv::Point> Cluster;
+typedef std::vector<DBPoint> Cluster;
 
 class DBScanProcessor : public Processor {
 
@@ -17,19 +19,15 @@ private:
 
 	int n_motion;
 
-	Cluster visited_points;
-	Cluster clustered_points;
-
 	// DBSCAN Parameters
-	int minPoints = 3;	// Note should be at least >= 2
-	float maxDist = 5.0f;
+	int minPoints = 5;	// Note should be at least >= 2
+	float maxDist = 25.0f;
 
-	float getDistanceBetween(cv::Point c_loc, cv::Point p_loc);
-	bool findPointInList(Cluster list, cv::Point p);
-
-	Cluster getRegion(cv::Point loc);
-	Cluster expandCluster(cv::Point loc, Cluster loc_neighbors);
+	Cluster getRegion(DBPoint loc, Cluster & neighbors);
+	Cluster expandCluster(DBPoint loc, Cluster loc_neighbors);
 
 public:
+	DBScanProcessor();
+
 	std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame);
 };

@@ -35,10 +35,11 @@ int main(int argv, char ** argc) {
 		for (std::shared_ptr<CameraDevice> dev : devices) {
 			std::shared_ptr<Frame> frame = dev->getFrame();
 			
-			 main_chain.addFrame(frame);
-			 frame = main_chain.getResult();
-
-			cv::imshow(dev->getName(), frame->getData());
+			main_chain.addFrame(frame);
+			frame = main_chain.getResult();
+			
+			cv::imshow("motion mask", boost::any_cast<cv::Mat>(frame->getFeature("motion_mask")));
+			cv::imshow(dev->getName(), boost::any_cast<cv::Mat>(frame->getFeature("color_clusters")));
 		}
 
 		if (cv::waitKey(2) >= 0)

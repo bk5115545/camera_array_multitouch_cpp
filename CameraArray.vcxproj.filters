@@ -57,6 +57,9 @@
     <ClCompile Include="src\DBScanProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
+    <ClCompile Include="src\DBPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CameraDevice.h">
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="include\DBScanProcessor.h">
       <Filter>Header Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DBPoint.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

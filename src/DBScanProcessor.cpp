@@ -8,74 +8,54 @@
 	k nearest neighbors
 */
 
+DBScanProcessor::DBScanProcessor() {}
+
 std::shared_ptr<Frame> DBScanProcessor::computeFrame(std::shared_ptr<Frame> current_frame) {
 	std::vector<Cluster> clusters;
+	DBPoint current_point;
+	Cluster current_neighbors (100);
 
 	motion_mat = boost::any_cast<cv::Mat>(current_frame->getFeature("motion_mask"));
 	motion_locations = boost::any_cast<cv::Mat>(current_frame->getFeature("motion_locs"));
 	n_motion = motion_locations.rows;
 
 	for (int i = 0; i < n_motion; i++) {
-		cv::Point current_point = motion_locations.at<cv::Point>(i);
+		current_point.pt = motion_locations.at<cv::Point>(i);
 
-		if (findPointInList(visited_points, current_point))
+		if (current_point.visited)
 			continue;
 
-		visited_points.push_back(current_point);
+		current_point.visited = true;
 
-		Cluster neighbors = getRegion(current_point);
+		getRegion(current_point, current_neighbors);
 
-		if (neighbors.size() >= minPoints)
-			clusters.push_back(expandCluster(current_point, neighbors));
+		if (current_neighbors.size() >= minPoints)
+			clusters.push_back(expandCluster(current_point, current_neighbors));
 	}
 
 	current_frame->addFeature("clusters", clusters);
-	
-	//visited_points.empty();
-	//clustered_points.empty();
 
 	return current_frame;
 }
 
-float DBScanProcessor::getDistanceBetween(cv::Point c_loc, cv::Point p_loc) {
-	return sqrt(pow(abs(p_loc.x - c_loc.x), 2) + pow(abs(p_loc.y - c_loc.y), 2));
-}
-
-bool DBScanProcessor::findPointInList(Cluster list, cv::Point p) {
-	auto iter = std::find_if(list.begin(), list.end(),
-		[p] (cv::Point p2) -> bool {
-			if ((p.x == p2.x) & (p.y == p2.y))
-				return true;
-			return false;
-		});
-
-	if (iter != list.end())
-		return true;
-	return false;
-}
-
-/*
-	dist = side length of square
-*/
-Cluster DBScanProcessor::getRegion(cv::Point loc) {
-	Cluster neighbors; 
-
+Cluster DBScanProcessor::getRegion(DBPoint loc, Cluster & neighbors) {
 	neighbors.push_back(loc);
 
-	float min_x = loc.x - (maxDist / 2);
-	float min_y = loc.y - (maxDist / 2);
+	int min_x = loc.pt.x - (maxDist / 2);
+	int min_y = loc.pt.y - (maxDist / 2);
 	
-	float max_x = loc.x + (maxDist / 2);
-	float max_y = loc.y + (maxDist / 2);
+	int max_x = loc.pt.x + (maxDist / 2);
+	int max_y = loc.pt.y + (maxDist / 2);
 
 	cv::Rect bounding_rect (cv::Point(), motion_mat.size());
+	DBPoint current_point;
 
 	for (int i = min_x; i < max_x; i++) {
 		for (int j = min_y; j < max_y; j++) {
-			cv::Point current_point (i, j);
-	
-			if (bounding_rect.contains(current_point))
-				if (motion_mat.at<uchar>(current_point) == 255)
+			current_point.pt = cv::Point(i, j);
+
+			if (bounding_rect.contains(current_point.pt))
+				if (motion_mat.at<uchar>(current_point.pt) == 255)
 					neighbors.push_back(current_point);
 		}
 	}
@@ -83,31 +63,30 @@ Cluster DBScanProcessor::getRegion(cv::Point loc) {
 	return neighbors;
 }
 
-Cluster DBScanProcessor::expandCluster(cv::Point loc, Cluster loc_neighbors) {
-	Cluster current = loc_neighbors;
+Cluster DBScanProcessor::expandCluster(DBPoint loc, Cluster loc_neighbors) {
+	DBPoint current_point = loc;
+	Cluster current_cluster = loc_neighbors;
+	Cluster current_neighbors (100);
 
-	current.push_back(loc);
+	current_cluster.push_back(current_point);
 
 	for (int i = 0; i < loc_neighbors.size(); i++) {
-		cv::Point p = loc_neighbors[i];
+		 current_point = loc_neighbors[i];
 
-		if (!findPointInList(visited_points, p)) {
-			visited_points.push_back(p);
+		if (!current_point.visited) {
+			current_point.visited = true;
 			
-			Cluster p_neighbors = getRegion(p);
+			getRegion(current_point, current_neighbors);
 
-			if (p_neighbors.size() >= minPoints) {
-				// append the neighbors to the current cluster
-				current.insert(current.end(), p_neighbors.begin(), p_neighbors.end());
-			}
+			if (current_neighbors.size() >= minPoints)
+				current_cluster.insert(current_cluster.end(), current_neighbors.begin(), current_neighbors.end());
 		}
 
-		if (!findPointInList(clustered_points, p)) {
-			clustered_points.push_back(p);
-			current.push_back(p);
+		if (!current_point.clustered) {
+			current_point.clustered = true;
+			current_cluster.push_back(current_point);
 		}
-	
 	}
 
-	return current;
+	return current_cluster;
 }
