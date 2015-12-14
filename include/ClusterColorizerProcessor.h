@@ -6,7 +6,6 @@
 #include "Processor.h"
 
 #include "DBScanProcessor.h"
-#include "DBPoint.h"
 
 class ClusterColorizerProcessor : public Processor {
 

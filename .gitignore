@@ -198,3 +198,5 @@ FakesAssemblies/
 *.vcxproj
 CameraArray.vcxproj.filters
 *.vcxproj
+
+resources/*

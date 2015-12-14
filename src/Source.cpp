@@ -38,8 +38,10 @@ int main(int argv, char ** argc) {
 			main_chain.addFrame(frame);
 			frame = main_chain.getResult();
 			
-			cv::imshow("motion mask", boost::any_cast<cv::Mat>(frame->getFeature("motion_mask")));
-			cv::imshow(dev->getName(), boost::any_cast<cv::Mat>(frame->getFeature("color_clusters")));
+			//cv::imshow("motion mask", boost::any_cast<cv::Mat>(frame->getFeature("motion_mask")));
+			cv::imshow("color clusters", boost::any_cast<cv::Mat>(frame->getFeature("color_clusters")));
+			
+			cv::imshow(dev->getName(), frame->getData());
 		}
 
 		if (cv::waitKey(2) >= 0)

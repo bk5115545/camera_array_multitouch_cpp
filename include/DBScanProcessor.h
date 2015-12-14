@@ -1,13 +1,16 @@
 
 #pragma once
 
-#include <cmath>
 #include <vector>
-#include <algorithm>
-#include <map>
 
 #include "Processor.h"
-#include "DBPoint.h"
+
+struct DBPoint {
+	cv::Point pt;
+
+	bool visited = false;
+	bool clustered = false;
+};
 
 typedef std::vector<DBPoint> Cluster;
 
@@ -16,18 +19,16 @@ class DBScanProcessor : public Processor {
 private:
 	cv::Mat motion_locations;
 	cv::Mat motion_mat;
-
-	int n_motion;
+	cv::Rect motion_bb;
 
 	// DBSCAN Parameters
 	int minPoints = 5;	// Note should be at least >= 2
 	float maxDist = 25.0f;
 
-	Cluster getRegion(DBPoint loc, Cluster & neighbors);
+	void getRegion(DBPoint loc, Cluster & neighbors);
 	Cluster expandCluster(DBPoint loc, Cluster loc_neighbors);
 
 public:
 	DBScanProcessor();
-
 	std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame);
 };
