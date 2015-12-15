@@ -12,43 +12,28 @@
 #include "ClusterColorizerProcessor.h"
 
 int main(int argv, char ** argc) {
-	bool rendering = true;
+	cv::VideoCapture image_seq ("D:\\Projects\\camera_array_multitouch_cpp\\resources\\Testsets\\FBMS\\cars10\\cars10_%2d.jpg");
+	
+	cv::VideoWriter vid_output (
+		"D:\\Projects\\camera_array_multitouch_cpp\\resources\\program-output\\output.avi", static_cast<int>(image_seq.get(CV_CAP_PROP_FOURCC)), 
+		image_seq.get(CV_CAP_PROP_FPS), cv::Size((int) image_seq.get(CV_CAP_PROP_FRAME_WIDTH), (int) image_seq.get(CV_CAP_PROP_FRAME_HEIGHT)), true
+	);
 
-	std::vector<std::shared_ptr<CameraDevice>> devices = std::vector<std::shared_ptr<CameraDevice>>();
+	cv::Mat image;
 
-	for(int i = 0; i < 8; i++) {
-		std::shared_ptr<CameraDevice> dev = std::make_shared<CameraDevice>(CameraDevice(i));
-		
-		if(dev->acquire()) {
-			devices.push_back(dev);
-			cv::namedWindow(dev->getName());
-		}
+	while (true) {
+		image_seq >> image;
+
+		if (image.empty())
+			break;
+
+		vid_output << image;
 	}
 
-	Transformer main_chain;
+	std::cout << "Done" << std::endl;
 
-	main_chain.addProcessor(new MotionProcessor());
-	main_chain.addProcessor(new DBScanProcessor());
-	main_chain.addProcessor(new ClusterColorizerProcessor());
-
-	while (rendering) {
-		for (std::shared_ptr<CameraDevice> dev : devices) {
-			std::shared_ptr<Frame> frame = dev->getFrame();
-			
-			main_chain.addFrame(frame);
-			frame = main_chain.getResult();
-			
-			//cv::imshow("motion mask", boost::any_cast<cv::Mat>(frame->getFeature("motion_mask")));
-			cv::imshow("color clusters", boost::any_cast<cv::Mat>(frame->getFeature("color_clusters")));
-			
-			cv::imshow(dev->getName(), frame->getData());
-		}
-
-		if (cv::waitKey(2) >= 0)
-			rendering = false;
-	}
-
-	main_chain.stopProcessors();
+	image_seq.release();
+	vid_output.release();
 
 	return 0;
 }
