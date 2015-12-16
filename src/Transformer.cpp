@@ -26,6 +26,9 @@ void Transformer::addProcessor(Processor * p) {
 
 	threads.push_back(std::thread([=] { p->run(); }));
 	processors.push_back(p);
+
+	// Hack but at least it works for now
+	threads[threads.size() - 1].detach();
 }
 
 void Transformer::addFrame(std::shared_ptr<Frame> frame) {
@@ -36,6 +39,8 @@ void Transformer::stopProcessors() {
 	for (int i = 0; i < processors.size(); i++) {
 		processors[i]->stop();
 	}
+
+	processors.clear();
 }
 
 std::shared_ptr<Frame> Transformer::getResult() {
