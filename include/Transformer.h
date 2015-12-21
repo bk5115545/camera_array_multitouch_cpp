@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <thread>
+#include <cstdarg>
 
 #include "Frame.h"
 #include "FrameCache.h"
@@ -17,6 +18,9 @@ private:
 
 public:
 	Transformer();
+	Transformer(std::vector<Processor *> procs);
+	Transformer(Processor * proc ...);
+
 	~Transformer();
 
 	void addProcessor(Processor * p);

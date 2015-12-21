@@ -5,6 +5,29 @@ Transformer::Transformer() {
 	input_cache = new FrameCache(100);
 }
 
+/*
+	TODO fix
+*/
+Transformer::Transformer(std::vector<Processor *> procs) {
+	processors = procs;
+}
+
+/*
+	TODO fix
+*/
+Transformer::Transformer(Processor * proc ...) {
+	va_list args;
+	
+	va_start(args, proc);
+
+	while (proc) {
+		addProcessor(va_arg(args, Processor *));
+		++proc;
+	}
+	
+	va_end(args);
+}
+
 Transformer::~Transformer() {
 	if (output_cache)
 		delete output_cache;
