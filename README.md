@@ -12,8 +12,6 @@ This project is free for public and educational use however please include a not
 ## Implementation Specific Details
 This implementation will require several ```(2+)``` USB cameras that operate at a minimum resolution of ```320x240```.  The frame rate of the cameras is not entirely important since this project will be limited by the processor and not the frame rate.  This implementation also requires adequate bandwidth and power for the number of cameras which you want to use.
 
----
-## Implementation Gimmicks
 For reference 2 cameras operating at ```640x480``` at ```60 FPS``` is enough to max out the power on a USB3 bus (```5V at 0.9A```).  This implementation will experiment with using embedded Raspberry PIs to preprocess data, provide more USB ports, and power more cameras and will communicate with the host through either USB, Serial, or Ethernet (```undecided```).
 
 ---
@@ -28,7 +26,7 @@ First steps are as follows:
 6. Test performance and feasibility of embedded computers (```Raspberry PI or similar```).
 7. Design frame for camera array and wiring/components.
 8. Design and implement automatic camera calibration and real-time parameter tuning for optimal tracking and feature extraction.
- 
+
 
 ---
 ## Long-Term Goal
