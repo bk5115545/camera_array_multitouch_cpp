@@ -27,7 +27,7 @@ std::shared_ptr<Frame> DBScanProcessor::computeFrame(std::shared_ptr<Frame> curr
 		if (!current_point.visited) {
 			current_point.visited = true;
 
-			Cluster current_neighbors(100);
+			Cluster current_neighbors;
 			getRegion(current_point, current_neighbors);
 
 			if (current_neighbors.size() >= minPoints)
@@ -59,28 +59,6 @@ void DBScanProcessor::getRegion(DBPoint loc, Cluster & neighbors) {
 			}
 		}
 	}
-
-/*
-	cv::Rect bounding_search_box(cv::Point(min_x, min_y), cv::Point(min_x + maxDist, min_y + maxDist));
-
-	for (int i = 0; i < motion_locations.rows; i++) {
-		current_point.pt = motion_locations.at<cv::Point>(i);
-
-		if (bounding_search_box.contains(current_point.pt))
-			neighbors.push_back(current_point);
-	}
-
-	neighbors.push_back(loc);
-	for (int i = 0; i < nonZeroLocs.rows; i++) {
-		roi_loc = nonZeroLocs.at<cv::Point>(i);
-
-		// Transform roi coordinate space to motion_mat cordinate space
-		transformed = cv::Point(loc.pt.x + (midpt - roi_loc.x), loc.pt.y + (midpt - roi_loc.y));
-		
-		if (motion_bb.contains(transformed))
-			neighbors.push_back(DBPoint(transformed));
-	}
-*/
 }
 
 Cluster DBScanProcessor::expandCluster(DBPoint loc, Cluster loc_neighbors) {
@@ -95,7 +73,7 @@ Cluster DBScanProcessor::expandCluster(DBPoint loc, Cluster loc_neighbors) {
 		if (!current_point.visited) {
 			current_point.visited = true;
 			
-			Cluster current_neighbors (100);
+			Cluster current_neighbors;
 			getRegion(current_point, current_neighbors);
 
 			if (current_neighbors.size() >= minPoints)
