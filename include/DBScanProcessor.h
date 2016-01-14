@@ -5,30 +5,38 @@
 
 #include "Processor.h"
 
-struct DBPoint {
-	cv::Point pt;
-
-	bool visited = false;
-	bool clustered = false;
-};
-
-typedef std::vector<DBPoint> Cluster;
+typedef std::vector<cv::Point> Cluster;
 
 class DBScanProcessor : public Processor {
 
 private:
-	cv::Mat motion_locations;
-	cv::Mat motion_mat;
+	/* Masks */
+	cv::Mat masks [3];
+
+	enum Mask {
+		MOTION,
+		VISITED,
+		CLUSTERED
+	};
+
+	enum State {
+		INACTIVE = 0,
+		ACTIVE = 255
+	};
+
 	cv::Rect motion_bb;
 
 	// DBSCAN Parameters
-	int minPoints = 5;	// Note should be at least >= 2
-	float maxDist = 25.0f;
+	int minPoints = 4;	// Note should be at least >= 2
+	int maxDist = 10;	// Note should be at least >= 3
 
-	void getRegion(DBPoint loc, Cluster & neighbors);
-	Cluster expandCluster(DBPoint loc, Cluster loc_neighbors);
+	Cluster getRegion(cv::Point loc);
+	Cluster expandCluster(cv::Point loc, Cluster loc_neighbors);
+
+	/* Mask Management */
+	bool getState(Mask mask, cv::Point pt);
+	void setState(Mask mask, cv::Point pt, bool active);
 
 public:
-	DBScanProcessor();
 	std::shared_ptr<Frame> computeFrame(std::shared_ptr<Frame> current_frame);
 };

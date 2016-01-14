@@ -22,7 +22,7 @@ std::shared_ptr<Frame> ClusterColorizerProcessor::computeFrame(std::shared_ptr<F
 
 	for (int i = 0; i < clusters.size(); i++) {
 		for (int j = 0; j < clusters[i].size(); j++)
-			color_clusters.at<cv::Vec3b>(clusters[i][j].pt) = colors[current_color % colors.size()];
+			color_clusters.at<cv::Vec3b>(clusters[i][j]) = colors[current_color % colors.size()];
 
 		current_color++;
 	}

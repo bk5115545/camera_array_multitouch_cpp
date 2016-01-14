@@ -52,15 +52,20 @@ int main(int argc, char * argv[]) {
 		
 		auto frame_end_time = std::chrono::steady_clock::now();
 		
-		cv::imshow("blah", image);
+		//cv::imshow("Realtime Output", image);
 		cv::imwrite("D:\\Projects\\camera_array_multitouch_cpp\\resources\\program-output\\output_" + std::to_string(image_id) + ".png", image);
 
-		cv::waitKey(5);
+		if (image_id >= 15)
+			break;
+
+		//cv::waitKey(5);
 		image_id++;
 
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (frame_end_time - frame_start_time);
 		frame_times.push_back(duration);
+
 		log << "Frame Processed in " << duration.count() << " ms" << std::endl;
+		std::cout << "Processed Frame " << image_id << std::endl;
 	}
 
 	auto total_end_time = std::chrono::steady_clock::now();
