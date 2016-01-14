@@ -1,10 +1,6 @@
 
 #include "DBScanProcessor.h"
 
-#include <iostream>
-#include <stdlib.h>
-#include <time.h>     
-
 /*
 	DBScanProcessor generates a list of clusters (list) based on density of the movement
 	points. This is important for object / user segmentation. ClusterProcessor currently 

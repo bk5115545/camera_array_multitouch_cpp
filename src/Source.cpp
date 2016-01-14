@@ -16,13 +16,14 @@
 #include "ClusterColorizerProcessor.h"
 
 int main(int argc, char * argv[]) {
+
 	cv::VideoCapture image_seq (
-		"D:\\Projects\\camera_array_multitouch_cpp\\resources\\Testsets\\FBMS\\rabbits02\\rabbits02_%4d.jpg"
+		"D:\\Projects\\camera_array_multitouch_cpp\\resources\\Testsets\\FBMS\\rabbits03\\rabbits03_0%3d.jpg"
 	);
 
 	std::ofstream log;
 	log.open("D:\\Projects\\camera_array_multitouch_cpp\\resources\\program-output\\log.txt");
-
+	
 	Transformer main_chain;
 	
 	main_chain.addProcessor(new MotionProcessor());
@@ -30,12 +31,11 @@ int main(int argc, char * argv[]) {
 	main_chain.addProcessor(new ClusterColorizerProcessor());
 	
 	cv::Mat image;
-	int image_id = 0;
 
 	std::vector<std::chrono::milliseconds> frame_times;
 
 	auto total_start_time = std::chrono::steady_clock::now();
-
+	int image_id = 0;
 	while (true) {
 		auto frame_start_time = std::chrono::steady_clock::now();
 
@@ -52,20 +52,15 @@ int main(int argc, char * argv[]) {
 		
 		auto frame_end_time = std::chrono::steady_clock::now();
 		
-		//cv::imshow("Realtime Output", image);
+		cv::imshow("Realtime Output", image);
 		cv::imwrite("D:\\Projects\\camera_array_multitouch_cpp\\resources\\program-output\\output_" + std::to_string(image_id) + ".png", image);
-
-		if (image_id >= 15)
-			break;
-
-		//cv::waitKey(5);
 		image_id++;
+		cv::waitKey(5);
 
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (frame_end_time - frame_start_time);
 		frame_times.push_back(duration);
 
 		log << "Frame Processed in " << duration.count() << " ms" << std::endl;
-		std::cout << "Processed Frame " << image_id << std::endl;
 	}
 
 	auto total_end_time = std::chrono::steady_clock::now();
