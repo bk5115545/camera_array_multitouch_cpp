@@ -22,8 +22,6 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 	cv::erode(diff_mat, diff_mat, cv::Mat(5, 5, CV_8UC1), cv::Point(0, 0));
 	cv::bitwise_and(current_mat, diff_mat, diff_mat);	// TODO do in full color
 
-	current_frame->addFeature("diff", diff_mat);
-
 	// Calculate motion mask
 	cv::Mat motion_mask = cv::Mat(current_mat.size(), current_mat.type());
 	cv::inRange(diff_mat, cv::Scalar(1, 1, 1), cv::Scalar(255, 255, 255), motion_mask);
@@ -37,6 +35,5 @@ std::shared_ptr<Frame> MotionProcessor::computeFrame(std::shared_ptr<Frame> curr
 	// update previous frame
 	previous_mat = current_mat;
 
-	//return std::make_shared<Frame>(motion_mask, current_frame->getCameraID(), current_frame->getID());
 	return current_frame;
 }
