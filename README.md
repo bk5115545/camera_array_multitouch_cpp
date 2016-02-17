@@ -1,8 +1,10 @@
+This project has been moved to our internal development branch.  The code here is maintained for public reference.
+
 # camera_array_multitouch_cpp
 
 ---
 ## Why/Who/How will this project be developed
-This project is sponsored by the [University of Arkansas at Little Rock's Emerging Analytics Center](http://eac.ualr.edu).  The EAC is currently directed by [Dr. Carolina Cruz-Neira](https://en.wikipedia.org/wiki/Carolina_Cruz-Neira) a.k.a inventor of the [CAVE immersive virtual reality environment](https://en.wikipedia.org/wiki/Cave_automatic_virtual_environment).  
+This project is sponsored by the [University of Arkansas at Little Rock's Emerging Analytics Center](http://eac.ualr.edu).
 
 The goal of this project is to create an open-source and easily implementable version of [Interaction Spaces](http://www.scsc.no/daniel/multi-touch/index.html) as made by the South Carolinia State University.
 
